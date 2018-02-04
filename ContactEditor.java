@@ -1,8 +1,10 @@
 package addressbook;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -11,7 +13,17 @@ public class ContactEditor {
 
     private Contact contact;
 
-    public ContactEditor() throws IOException {
+    @FXML
+    private TextField firstNameField;
+
+    @FXML
+    private TextField lastNameField;
+
+    public ContactEditor()  {
+
+    }
+
+    void showWindow() throws IOException {
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
 
@@ -19,6 +31,8 @@ public class ContactEditor {
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
+
+        System.out.println(firstNameField.getText());
     }
 
     public void setContact(Contact editContact) {

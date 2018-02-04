@@ -3,9 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="462.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="462.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="addressbook.ContactEditor">
    <top>
       <HBox fx:id="firstNameFIeld" alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="570.0" spacing="15.0" BorderPane.alignment="TOP_LEFT">
          <children>
@@ -36,10 +38,10 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="304.0" prefWidth="827.0">
                      <children>
-                        <GridPane alignment="TOP_CENTER" hgap="15.0" layoutX="27.0" layoutY="20.0" prefHeight="272.0" prefWidth="770.0" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="27.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+                        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="29.0" layoutY="9.0" prefHeight="289.0" prefWidth="814.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="105.0" />
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="259.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="124.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="236.0" />
                               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" prefWidth="133.0" />
                               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="234.0" />
                           </columnConstraints>
@@ -49,47 +51,200 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label prefHeight="16.0" prefWidth="35.0" text="Imię" />
-                              <TextField fx:id="firstNameField" promptText="Podaj imię" GridPane.columnIndex="1" />
+                              <TextField fx:id="firstNameField" promptText="Podaj imię" text="Test" GridPane.columnIndex="1" />
                               <Label text="Nazwisko" GridPane.rowIndex="1" />
                               <Label text="Wyświetl jako" GridPane.rowIndex="2" />
                               <Label text="Pseudonim" GridPane.rowIndex="3" />
-                              <Label text="Telefon komórkowy" GridPane.columnIndex="2" />
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <Label text="Dom" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="Fax" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Label text="Pager" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <TextField fx:id="lastNameField" promptText="Podaj nazwisko" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField promptText="Wyświetlana nazwa" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <TextField fx:id="phoneNumberField" promptText="Podaj nr telefonu komórkowego" GridPane.columnIndex="3" />
-                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <TextField fx:id="nameField" promptText="Wyświetlana nazwa" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="pseudonymField" promptText="Podaj pseudonim" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField fx:id="hausePhoneNumberField" promptText="Podaj nr. telefonu domowego" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="faxPhoneNumberField" promptText="Podaj numer faxu" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField fx:id="pagerPhoneNumberField" promptText="Podaj numer pagera" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                               <Label text="E-Mail" GridPane.rowIndex="4" />
-                              <TextField fx:id="emailField" promptText="Podaj adres e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <TextField fx:id="emailField" promptText="Podaj podstawowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="phoneNumberField" promptText="Podaj nr. telefonu komórkowego" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                              <Label text="Telefon komórkowy" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <Label text="Dodatkowy E-mail" GridPane.rowIndex="5" />
+                              <Label text="Praca" GridPane.columnIndex="2" />
+                              <TextField fx:id="workPhoneNumberField" promptText="Podaj nr. telefonu służbowego" GridPane.columnIndex="3" />
+                              <TextField fx:id="secondEmailField" promptText="Podaj dodatkowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Untitled Tab 2">
+          <Tab text="Prywatny">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="15.0" layoutY="8.0" prefHeight="274.0" prefWidth="798.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="198.0" minWidth="10.0" prefWidth="106.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="373.0" minWidth="10.0" prefWidth="242.0" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="336.0" minWidth="10.0" prefWidth="128.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="351.0" minWidth="10.0" prefWidth="303.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Adres" />
+                              <Label text="Miasto" GridPane.rowIndex="1" />
+                              <Label text="Województwo" GridPane.rowIndex="2" />
+                              <Label text="Kod pocztowy" GridPane.rowIndex="3" />
+                              <TextField fx:id="addressField" promptText="Podaj adres" GridPane.columnIndex="1" />
+                              <TextField fx:id="cityField" promptText="Podaj nazwę miasta" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="voivodeshipField" promptText="Podaj nazwę województwa" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="postalCodeField" promptText="Podaj kod pocztowy" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label text="Państwo" GridPane.rowIndex="4" />
+                              <Label text="Strona WWW" GridPane.columnIndex="2" />
+                              <Label text="Urodziny" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <TextField fx:id="countryField" promptText="Podaj nazwę państwa" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="websiteField" promptText="Podaj adres strony internetowej" GridPane.columnIndex="3" />
+                              <DatePicker fx:id="birthdayField" promptText="Podaj datę urodzin" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Służbowy">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="17.0" layoutY="10.0" prefHeight="270.0" prefWidth="794.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="137.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="259.0" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="328.0" minWidth="10.0" prefWidth="129.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="273.0" minWidth="10.0" prefWidth="271.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Stanowisko" />
+                              <Label text="Dział" GridPane.rowIndex="1" />
+                              <Label text="Firma/Organizacja" GridPane.rowIndex="2" />
+                              <Label text="Adres" GridPane.rowIndex="3" />
+                              <Label text="Miasto" GridPane.rowIndex="4" />
+                              <TextField fx:id="officeField" promptText="Podaj nazwę stanowiska" GridPane.columnIndex="1" />
+                              <TextField fx:id="departamentField" promptText="Podaj nazwę działu" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="companyNameField" promptText="Podaj nawę firmy" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="companyAddressField" promptText="Podaj adres firmy" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField promptText="Podaj miasto firmy" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="Województwo" GridPane.columnIndex="2" />
+                              <Label text="Kod pocztowy" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="Państwo" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Label text="Strona WWW" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <TextField fx:id="companyAddres" promptText="Podaj województwo firmy" GridPane.columnIndex="3" />
+                              <TextField fx:id="companyPostalCodeField" promptText="Podaj kod pocztowy adresu firmy" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="companyCountyField" promptText="Podaj kraj firmy" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField fx:id="companyWebsiteField" promptText="Podaj adres strony WWW firmy" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Inne">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="14.0" layoutY="13.0" prefHeight="264.0" prefWidth="799.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="404.0" minWidth="0.0" prefWidth="97.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="701.0" minWidth="0.0" prefWidth="356.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="701.0" minWidth="10.0" prefWidth="328.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="86.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="78.0" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Informacja 1" />
+                              <Label text="Informacja 2" GridPane.rowIndex="1" />
+                              <Label text="Informacja 3" GridPane.rowIndex="2" />
+                              <Label text="Informacja 4" GridPane.rowIndex="3" />
+                              <TextField fx:id="info1Field" prefHeight="25.0" prefWidth="357.0" promptText="Podaj opis" GridPane.columnIndex="1" />
+                              <TextField fx:id="info2Field" promptText="Podaj opis" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="info3Field" promptText="Podaj opis" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="info4Field" promptText="Podaj opis" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label text="Notatki" GridPane.columnIndex="2" GridPane.valignment="BOTTOM" />
+                              <TextArea fx:id="notesField" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="3" />
+                           </children>
+                        </GridPane>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Czat">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="TOP_CENTER" layoutX="15.0" layoutY="10.0" prefHeight="269.0" prefWidth="797.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="135.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.0" minWidth="10.0" prefWidth="228.0" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="172.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="345.0" minWidth="10.0" prefWidth="254.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Google Talk" />
+                              <Label text="AIM" GridPane.rowIndex="1" />
+                              <Label text="Yahoo!" GridPane.rowIndex="2" />
+                              <Label text="Skype" GridPane.rowIndex="3" />
+                              <Label text="QQ" GridPane.rowIndex="4" />
+                              <TextField GridPane.columnIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="ICQ" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="MSN" GridPane.columnIndex="2" />
+                              <Label text="Jabber" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Label text="IRC" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <TextField GridPane.columnIndex="3" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </center>
    <bottom>
       <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="797.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="Anuluj" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="OK" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="Anuluj" />
+            <Button fx:id="okButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="OK" />
          </children>
          <BorderPane.margin>
             <Insets left="15.0" right="15.0" top="15.0" />
