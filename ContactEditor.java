@@ -13,17 +13,7 @@ public class ContactEditor {
 
     private Contact contact;
 
-    @FXML
-    private TextField firstNameField;
-
-    @FXML
-    private TextField lastNameField;
-
-    public ContactEditor()  {
-
-    }
-
-    void showWindow() throws IOException {
+    public ContactEditor() throws IOException  {
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
 
@@ -31,8 +21,6 @@ public class ContactEditor {
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
-
-        System.out.println(firstNameField.getText());
     }
 
     public void setContact(Contact editContact) {

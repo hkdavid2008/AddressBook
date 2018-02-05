@@ -48,7 +48,6 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 try {
                     ContactEditor newEditor = new ContactEditor();
-                    newEditor.showWindow();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
