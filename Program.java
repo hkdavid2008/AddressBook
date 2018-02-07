@@ -21,12 +21,13 @@ public class Program extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    private TableView<Contact> contactList;
 
     public ObservableList<Contact> getContats() {
         ObservableList<Contact> list = FXCollections.observableArrayList();
-        list.add(new Contact(1,"Jan","Kowalski","665015862","paw.inter@onet.eu"));
-        list.add(new Contact(2,"Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
-        list.add(new Contact(3,"Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
+        list.add(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
+        list.add(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
+        list.add(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return list;
     }
 
@@ -48,16 +49,28 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 try {
                     ContactEditor newEditor = new ContactEditor();
+                    contactList.getItems().add(newEditor.getContact());
+                    contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
-
             }
         });
 
         Button modifyContactButton = new Button();
         modifyContactButton.setText("Modyfikuj");
         modifyContactButton.setPrefSize(150,25);
+        modifyContactButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+            }
+        });
 
         Button deleteContactButton = new Button();
         deleteContactButton.setText("Usuń");
@@ -80,7 +93,7 @@ public class Program extends Application {
         centerRight.setOrientation(Orientation.VERTICAL);
 
         //Contact list
-        TableView<Contact> contactList = new TableView<>();
+        contactList = new TableView<>();
         TableColumn<Contact,String> firstNameCol = new TableColumn("Imię");
         firstNameCol.setMinWidth(100);
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));

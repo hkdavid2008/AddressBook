@@ -56,7 +56,7 @@
                           </rowConstraints>
                            <children>
                               <Label prefHeight="16.0" prefWidth="35.0" text="Imię" />
-                              <TextField fx:id="firstNameField" onKeyReleased="#validateField" promptText="Podaj imię" GridPane.columnIndex="1">
+                              <TextField fx:id="firstNameField" promptText="Podaj imię" GridPane.columnIndex="1">
                                  <effect>
                                     <ColorAdjust />
                                  </effect></TextField>
@@ -73,7 +73,7 @@
                               <TextField fx:id="faxPhoneNumberField" promptText="Podaj numer faxu" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                               <TextField fx:id="pagerPhoneNumberField" promptText="Podaj numer pagera" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                               <Label text="E-Mail" GridPane.rowIndex="4" />
-                              <TextField fx:id="emailField" onKeyTyped="#validateEmail" promptText="Podaj podstawowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="emailField" onKeyTyped="#validateField" promptText="Podaj podstawowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <TextField fx:id="phoneNumberField" promptText="Podaj nr. telefonu komórkowego" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                               <Label text="Telefon komórkowy" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                               <Label text="Dodatkowy E-mail" GridPane.rowIndex="5" />
@@ -117,7 +117,7 @@
                               <Label text="Strona WWW" GridPane.columnIndex="2" />
                               <Label text="Urodziny" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <TextField fx:id="countryField" promptText="Podaj nazwę państwa" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <TextField fx:id="websiteField" onKeyPressed="#validateField" promptText="Podaj adres strony internetowej" GridPane.columnIndex="3" />
+                              <TextField fx:id="websiteField" onKeyPressed="#validateWebsite" promptText="Podaj adres strony internetowej" GridPane.columnIndex="3" />
                               <DatePicker fx:id="birthdayField" promptText="Podaj datę urodzin" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
@@ -160,7 +160,7 @@
                               <TextField fx:id="companyAddres" promptText="Podaj województwo firmy" GridPane.columnIndex="3" />
                               <TextField fx:id="companyPostalCodeField" promptText="Podaj kod pocztowy adresu firmy" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                               <TextField fx:id="companyCountyField" promptText="Podaj kraj firmy" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                              <TextField fx:id="companyWebsiteField" onKeyPressed="#validateField" promptText="Podaj adres strony WWW firmy" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <TextField fx:id="companyWebsiteField" onKeyTyped="#validateWebsite" promptText="Podaj adres strony WWW firmy" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
                      </children>
