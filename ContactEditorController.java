@@ -1,15 +1,18 @@
 package addressbook;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
-import javax.sound.midi.SysexMessage;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,11 +53,7 @@ public class ContactEditorController {
     @FXML private TextArea notesField;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
-    private static boolean validateEmail(String emailStr) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
-        return matcher.find();
-    }
+    public static final Map<TextField,String> errorList = new HashMap<TextField, String>();
 
     private boolean hasMinData() {
         if (nameField.getText().isEmpty()==false || firstNameField.getText().isEmpty()==false || lastNameField.getText().isEmpty()==false) {
@@ -64,19 +63,37 @@ public class ContactEditorController {
         }
     }
 
-    private void setError(String error) {
-        System.out.println("Error");
-        okButton.setDisable(false);
+
+    private void setError(String errorMsg, TextField field) {
+        errorLabel.setText(errorMsg);
+        okButton.setDisable(true);
+        field.getStylesheets().add(getClass().getResource("ContactEditorStyle.css").toExternalForm());
+    }
+
+    private void setOk(TextField field) {
+        field.getStylesheets().clear();
+        if (errorList.isEmpty()==true) {
+            errorLabel.setText("");
+            okButton.setDisable(false);
+
+        }
+    }
+
+
+    public void validateEmail(Event event) {
+        TextField source = (TextField)event.getSource();
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(source.getText());
+        if (matcher.find()==false) {
+            setError("Błąd! Podano niepoprawny e-mail.", source);
+        } else {
+            setOk(source);
+        }
     }
 
     public void validateField(Event event) throws MalformedURLException {
         TextField source = (TextField)event.getSource();
         if (source==emailField || source==secondEmailField) {
-            if (validateEmail(source.getText()) == false) {
-                okButton.setDisable(true);
-            } else {
 
-            }
         } else if (source==websiteField || source==companyWebsiteField) {
             try {
                 URL myURL = new URL(source.getText());

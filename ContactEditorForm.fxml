@@ -73,7 +73,7 @@
                               <TextField fx:id="faxPhoneNumberField" promptText="Podaj numer faxu" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                               <TextField fx:id="pagerPhoneNumberField" promptText="Podaj numer pagera" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                               <Label text="E-Mail" GridPane.rowIndex="4" />
-                              <TextField fx:id="emailField" onKeyTyped="#validateField" promptText="Podaj podstawowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="emailField" onKeyTyped="#validateEmail" promptText="Podaj podstawowy e-mail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <TextField fx:id="phoneNumberField" promptText="Podaj nr. telefonu komórkowego" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                               <Label text="Telefon komórkowy" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                               <Label text="Dodatkowy E-mail" GridPane.rowIndex="5" />
@@ -247,7 +247,7 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="797.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="errorLabel" text="Error" textFill="RED" />
+            <Label fx:id="errorLabel" textFill="RED" />
             <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#buttonClicked" prefHeight="26.0" prefWidth="91.0" text="Anuluj" />
             <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#buttonClicked" prefHeight="26.0" prefWidth="91.0" text="OK" />
          </children>
