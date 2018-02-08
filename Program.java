@@ -13,7 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Program extends Application {
@@ -50,7 +49,6 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor();
                     contactList.getItems().add(newEditor.getContact());
-                    //contactList.getItems().add(new Contact("Krzysztof","Matejko","415777998","krzysiek@yopmail.com"));
                     contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -66,6 +64,7 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 try {
                     ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
+                    newEditor.getContact();
                     contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -86,8 +85,8 @@ public class Program extends Application {
 
         //Address books
         TreeView<String> bookList = new TreeView<String>();
+
         center.getItems().add(bookList);
-        //pane.setLeft(bookList);
 
         //Center-right layout
         SplitPane centerRight = new SplitPane();
@@ -114,12 +113,17 @@ public class Program extends Application {
         contactList.setItems(getContats());
         contactList.getColumns().addAll(firstNameCol,lastNameCol,phoneNumberCol,emailCol);
 
-        //Info panel
-        WebView infoPanel = new WebView();
-        infoPanel.getEngine().load("https://www.mozilla.org/pl/thunderbird/");
+        //Contact Viewer
+        ContactViewer contactViewer;
+//        try {
+//            contactViewer = new ContactViewer();
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
 
         //Add elements to center
-        centerRight.getItems().addAll(contactList, infoPanel);
+        centerRight.getItems().add(contactList);
+        //centerRight.getItems().add(contactViewer);
         center.getItems().add(centerRight);
         center.setDividerPosition(0,0.2);
         pane.setCenter(center);

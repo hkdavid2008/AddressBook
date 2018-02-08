@@ -57,7 +57,7 @@ public class ContactEditor {
         editorController.setVoivodeshipField(contact.getVoivodeship());
         editorController.setPostalCodeField(contact.getPostalCode());
         editorController.setCountryField(contact.getCountry());
-        editorController.setWebsiteField(contact.getCompanyWebsite());      //POPRAWIĆ!!!!
+        editorController.setWebsiteField(contact.getCompanyWebsite());      //TODO - poprawić
         editorController.setOfficeField(contact.getOffice());
         editorController.setDepartamentField(contact.getDepartament());
         editorController.setCompanyNameField(contact.getCompanyName());
@@ -91,7 +91,7 @@ public class ContactEditor {
         contact.setVoivodeship(editorController.getVoivodeshipField());
         contact.setPostalCode(editorController.getPostalCodeField());
         contact.setCountry(editorController.getCountryField());
-        contact.setCompanyWebsite(editorController.getWebsiteField());  //POPRAWIĆ!!!!
+        contact.setCompanyWebsite(editorController.getWebsiteField());  //TODO - poprawić
         contact.setDepartament(editorController.getDepartamentField());
         contact.setCompanyName(editorController.getCompanyNameField());
         contact.setCompanyAddress(editorController.getCompanyAddressField());
@@ -104,7 +104,6 @@ public class ContactEditor {
         contact.setInfo4(editorController.getInfo4Field());
         contact.setNotes(editorController.getNotesField());
         contact.setBirthday(editorController.getBirthdayField());
-
         return contact;
     }
 }
