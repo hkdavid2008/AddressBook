@@ -57,7 +57,7 @@ public class ContactEditor {
         editorController.setVoivodeshipField(contact.getVoivodeship());
         editorController.setPostalCodeField(contact.getPostalCode());
         editorController.setCountryField(contact.getCountry());
-        editorController.setWebsiteField(contact.getCompanyWebsite());
+        editorController.setWebsiteField(contact.getCompanyWebsite());      //POPRAWIĆ!!!!
         editorController.setOfficeField(contact.getOffice());
         editorController.setDepartamentField(contact.getDepartament());
         editorController.setCompanyNameField(contact.getCompanyName());
@@ -74,6 +74,37 @@ public class ContactEditor {
     }
 
     public Contact getContact() {
+        //if no errors in controller
+        contact.setFirstName(editorController.getFirstNameField());
+        contact.setLastName(editorController.getLastNameField());
+        contact.setName(editorController.getNameField());
+        contact.setPseudonym(editorController.getPseudonymField());
+        contact.setHausePhoneNumber(editorController.getHausePhoneNumberField());
+        contact.setFaxPhoneNumber(editorController.getFaxPhoneNumberField());
+        contact.setPagerPhoneNumber(editorController.getPagerPhoneNumberField());
+        contact.setEmail(editorController.getEmailField());
+        contact.setPhoneNumber(editorController.getPhoneNumberField());
+        contact.setWorkPhoneNumber(editorController.getWorkPhoneNumberField());
+        contact.setSecondEmail(editorController.getSecondEmailField());
+        contact.setAddress(editorController.getAddressField());
+        contact.setCity(editorController.getCityField());
+        contact.setVoivodeship(editorController.getVoivodeshipField());
+        contact.setPostalCode(editorController.getPostalCodeField());
+        contact.setCountry(editorController.getCountryField());
+        contact.setCompanyWebsite(editorController.getWebsiteField());  //POPRAWIĆ!!!!
+        contact.setDepartament(editorController.getDepartamentField());
+        contact.setCompanyName(editorController.getCompanyNameField());
+        contact.setCompanyAddress(editorController.getCompanyAddressField());
+        contact.setCompanyPostalCode(editorController.getCompanyPostalCodeField());
+        contact.setCompanyCounty(editorController.getCompanyCountyField());     //TODO - country
+        contact.setCompanyWebsite(editorController.getCompanyWebsiteField());
+        contact.setInfo1(editorController.getInfo1Field());
+        contact.setInfo2(editorController.getInfo2Field());
+        contact.setInfo3(editorController.getInfo3Field());
+        contact.setInfo4(editorController.getInfo4Field());
+        contact.setNotes(editorController.getNotesField());
+        contact.setBirthday(editorController.getBirthdayField());
+
         return contact;
     }
 }

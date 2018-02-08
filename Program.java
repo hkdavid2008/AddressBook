@@ -50,6 +50,7 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor();
                     contactList.getItems().add(newEditor.getContact());
+                    //contactList.getItems().add(new Contact("Krzysztof","Matejko","415777998","krzysiek@yopmail.com"));
                     contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -65,10 +66,10 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 try {
                     ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
+                    contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
-
             }
         });
 
