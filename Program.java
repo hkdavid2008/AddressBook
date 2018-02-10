@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -31,7 +32,7 @@ public class Program extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         //Layout
         BorderPane pane = new BorderPane();
 
@@ -114,16 +115,15 @@ public class Program extends Application {
         contactList.getColumns().addAll(firstNameCol,lastNameCol,phoneNumberCol,emailCol);
 
         //Contact Viewer
-        ContactViewer contactViewer;
-//        try {
-//            contactViewer = new ContactViewer();
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
+        ScrollPane viewerPane = new ScrollPane();
+        ContactViewer contactViewer = new ContactViewer();
+        viewerPane.setContent(contactViewer);
 
         //Add elements to center
         centerRight.getItems().add(contactList);
-        //centerRight.getItems().add(contactViewer);
+        centerRight.getItems().add(viewerPane);
+        centerRight.setDividerPosition(0,0.5);
+
         center.getItems().add(centerRight);
         center.setDividerPosition(0,0.2);
         pane.setCenter(center);
