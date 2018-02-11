@@ -19,7 +19,6 @@ public class ContactEditor {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ContactEditorForm.fxml"));
         Parent form = loader.load();
         editorController = loader.getController();
-        setContact(new Contact());
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
@@ -49,7 +48,7 @@ public class ContactEditor {
         editorController.setFaxPhoneNumberField(contact.getFaxPhoneNumber());
         editorController.setPagerPhoneNumberField(contact.getPagerPhoneNumber());
         editorController.setEmailField(contact.getEmail());
-        editorController.setPhoneNumberField(contact.getPhoneNumber());
+        editorController.setPhoneNumberField(contact.getMobilePhoneNumber());
         editorController.setWorkPhoneNumberField(contact.getWorkPhoneNumber());
         editorController.setSecondEmailField(contact.getSecondEmail());
         editorController.setAddressField(contact.getAddress());
@@ -57,13 +56,13 @@ public class ContactEditor {
         editorController.setVoivodeshipField(contact.getVoivodeship());
         editorController.setPostalCodeField(contact.getPostalCode());
         editorController.setCountryField(contact.getCountry());
-        editorController.setWebsiteField(contact.getCompanyWebsite());      //TODO - poprawić
+        editorController.setWebsiteField(contact.getCompanyWebsite());
         editorController.setOfficeField(contact.getOffice());
         editorController.setDepartamentField(contact.getDepartament());
         editorController.setCompanyNameField(contact.getCompanyName());
         editorController.setCompanyAddressField(contact.getCompanyAddress());
         editorController.setCompanyPostalCodeField(contact.getCompanyPostalCode());
-        editorController.setCompanyCountyField(contact.getCompanyCounty());
+        editorController.setCompanyCountryField(contact.getCompanyCountry());
         editorController.setCompanyWebsiteField(contact.getCompanyWebsite());
         editorController.setInfo1Field(contact.getInfo1());
         editorController.setInfo2Field(contact.getInfo2());
@@ -74,7 +73,9 @@ public class ContactEditor {
     }
 
     public Contact getContact() {
-        //if no errors in controller
+        if (contact==null) {
+            contact = new Contact();
+        }
         contact.setFirstName(editorController.getFirstNameField());
         contact.setLastName(editorController.getLastNameField());
         contact.setName(editorController.getNameField());
@@ -83,7 +84,7 @@ public class ContactEditor {
         contact.setFaxPhoneNumber(editorController.getFaxPhoneNumberField());
         contact.setPagerPhoneNumber(editorController.getPagerPhoneNumberField());
         contact.setEmail(editorController.getEmailField());
-        contact.setPhoneNumber(editorController.getPhoneNumberField());
+        contact.setMobilePhoneNumber(editorController.getPhoneNumberField());
         contact.setWorkPhoneNumber(editorController.getWorkPhoneNumberField());
         contact.setSecondEmail(editorController.getSecondEmailField());
         contact.setAddress(editorController.getAddressField());
@@ -91,12 +92,12 @@ public class ContactEditor {
         contact.setVoivodeship(editorController.getVoivodeshipField());
         contact.setPostalCode(editorController.getPostalCodeField());
         contact.setCountry(editorController.getCountryField());
-        contact.setCompanyWebsite(editorController.getWebsiteField());  //TODO - poprawić
+        contact.setCompanyWebsite(editorController.getWebsiteField());
         contact.setDepartament(editorController.getDepartamentField());
         contact.setCompanyName(editorController.getCompanyNameField());
         contact.setCompanyAddress(editorController.getCompanyAddressField());
         contact.setCompanyPostalCode(editorController.getCompanyPostalCodeField());
-        contact.setCompanyCounty(editorController.getCompanyCountyField());     //TODO - country
+        contact.setCompanyCountry(editorController.getCompanyCountryField());
         contact.setCompanyWebsite(editorController.getCompanyWebsiteField());
         contact.setInfo1(editorController.getInfo1Field());
         contact.setInfo2(editorController.getInfo2Field());

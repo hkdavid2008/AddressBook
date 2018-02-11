@@ -5,14 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -50,7 +48,6 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor();
                     contactList.getItems().add(newEditor.getContact());
-                    contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -66,7 +63,6 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
                     newEditor.getContact();
-                    contactList.refresh();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -76,6 +72,12 @@ public class Program extends Application {
         Button deleteContactButton = new Button();
         deleteContactButton.setText("Usuń");
         deleteContactButton.setPrefSize(150,25);
+        deleteContactButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                contactList.getItems().remove(contactList.getSelectionModel().getSelectedItem());
+            }
+        });
 
         //Add buttons to topbar
         topbar.getChildren().addAll(newContactButton, modifyContactButton, deleteContactButton);
@@ -105,7 +107,7 @@ public class Program extends Application {
 
         TableColumn<Contact,String> phoneNumberCol = new TableColumn("Numer telefonu");
         phoneNumberCol.setMinWidth(100);
-        phoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        phoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("mobilePhoneNumber"));
 
         TableColumn<Contact,String> emailCol = new TableColumn("Adres Email");
         emailCol.setMinWidth(100);

@@ -40,7 +40,7 @@ public class ContactEditorController {
     @FXML private TextField companyAddressField;
     @FXML private TextField companyAddres;
     @FXML private TextField companyPostalCodeField;
-    @FXML private TextField companyCountyField;
+    @FXML private TextField companyCountryField;
     @FXML private TextField companyWebsiteField;
     @FXML private TextField info1Field;
     @FXML private TextField info2Field;
@@ -140,8 +140,8 @@ public class ContactEditorController {
         return companyPostalCodeField.getText();
     }
 
-    public String getCompanyCountyField() {
-        return companyCountyField.getText();
+    public String getCompanyCountryField() {
+        return companyCountryField.getText();
     }
 
     public String getCompanyWebsiteField() {
@@ -266,8 +266,8 @@ public class ContactEditorController {
         this.companyPostalCodeField.setText(companyPostalCode);
     }
 
-    public void setCompanyCountyField(String companyCounty) {
-        this.companyCountyField.setText(companyCounty);
+    public void setCompanyCountryField(String companyCountry) {
+        this.companyCountryField.setText(companyCountry);
     }
 
     public void setCompanyWebsiteField(String companyWebsite) {

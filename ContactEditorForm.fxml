@@ -159,7 +159,7 @@
                               <Label text="Strona WWW" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <TextField fx:id="companyAddres" promptText="Podaj województwo firmy" GridPane.columnIndex="3" />
                               <TextField fx:id="companyPostalCodeField" promptText="Podaj kod pocztowy adresu firmy" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField fx:id="companyCountyField" promptText="Podaj kraj firmy" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField fx:id="companyCountryField" promptText="Podaj kraj firmy" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                               <TextField fx:id="companyWebsiteField" onKeyTyped="#validateWebsite" promptText="Podaj adres strony WWW firmy" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
