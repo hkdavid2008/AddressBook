@@ -20,7 +20,7 @@
             <Image url="@profile.png" />
          </image>
       </ImageView>
-      <Label layoutX="173.0" layoutY="26.0" text="Imię i nazwisko">
+      <Label fx:id="nameLabel" layoutX="173.0" layoutY="26.0" text="Imię i nazwisko">
          <font>
             <Font name="Roboto Thin" size="25.0" />
          </font>
@@ -30,7 +30,7 @@
             <Insets />
          </opaqueInsets>
       </Separator>
-      <GridPane hgap="10.0" layoutX="173.0" layoutY="86.0" prefHeight="373.0" prefWidth="729.0" vgap="10.0">
+      <GridPane fx:id="grid" hgap="10.0" layoutX="173.0" layoutY="86.0" prefHeight="373.0" prefWidth="729.0" vgap="10.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -85,13 +85,13 @@
                               <Label text="Stanowisko" />
                               <Label text="Dział" GridPane.rowIndex="1" />
                               <Label text="Firma" GridPane.rowIndex="2" />
-                              <Label text="osiedle Leśne 13A/23" GridPane.columnIndex="1" />
-                              <Label text="Koziegłowy" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="wielkopolskie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="officeLabel" text="osiedle Leśne 13A/23" GridPane.columnIndex="1" />
+                              <Label fx:id="departamentLabel" text="Koziegłowy" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="companyNameLabel" text="wielkopolskie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Adres" GridPane.rowIndex="3" />
-                              <Label text="62-028" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="companyAddressLabel" text="62-028" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="Strona WWW" GridPane.rowIndex="4" />
-                              <Label text="http://www.google.pl" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label fx:id="companyWebsiteLabel" text="http://www.google.pl" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </content>
@@ -112,9 +112,9 @@
                               <Label text="Urodziny" />
                               <Label text="Info 1" GridPane.rowIndex="1" />
                               <Label text="Info 2" GridPane.rowIndex="2" />
-                              <Label text="osiedle Leśne 13A/23" GridPane.columnIndex="1" />
-                              <Label text="Koziegłowy" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="wielkopolskie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="birthdayLabel" text="osiedle Leśne 13A/23" GridPane.columnIndex="1" />
+                              <Label fx:id="info1Label" text="Koziegłowy" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="info2Label" text="wielkopolskie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </content>
@@ -147,13 +147,13 @@
                               <Label text="Praca" />
                               <Label text="Dom" GridPane.rowIndex="1" />
                               <Label text="Fax" GridPane.rowIndex="2" />
-                              <Label text="665015862" GridPane.columnIndex="1" />
-                              <Label text="12146823" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="74542757" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="workPhoneNumber" text="665015862" GridPane.columnIndex="1" />
+                              <Label fx:id="hausePhoneNumberLabel" text="12146823" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="faxPhoneNumberLabel" text="74542757" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Telefon komórkowy" GridPane.rowIndex="3" />
-                              <Label text="4575356" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="mobilePhoneNumberLabel" text="4575356" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="Pager" GridPane.rowIndex="4" />
-                              <Label text="57575757" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label fx:id="pagerPhoneNumberLabel" text="57575757" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </content>

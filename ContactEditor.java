@@ -84,6 +84,7 @@ public class ContactEditor {
         contact.setFaxPhoneNumber(editorController.getFaxPhoneNumberField());
         contact.setPagerPhoneNumber(editorController.getPagerPhoneNumberField());
         contact.setEmail(editorController.getEmailField());
+        contact.setWebsite(editorController.getWebsiteField());
         contact.setMobilePhoneNumber(editorController.getPhoneNumberField());
         contact.setWorkPhoneNumber(editorController.getWorkPhoneNumberField());
         contact.setSecondEmail(editorController.getSecondEmailField());

@@ -1,6 +1,8 @@
 package addressbook;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +22,7 @@ public class Program extends Application {
         launch(args);
     }
     private TableView<Contact> contactList;
+    ContactViewer contactViewer;
 
     public ObservableList<Contact> getContats() {
         ObservableList<Contact> list = FXCollections.observableArrayList();
@@ -47,7 +50,9 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 try {
                     ContactEditor newEditor = new ContactEditor();
-                    contactList.getItems().add(newEditor.getContact());
+                    if (newEditor.getContact()!=null) {
+                        contactList.getItems().add(newEditor.getContact());
+                    }
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -116,9 +121,16 @@ public class Program extends Application {
         contactList.setItems(getContats());
         contactList.getColumns().addAll(firstNameCol,lastNameCol,phoneNumberCol,emailCol);
 
+        contactList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contact>() {
+            @Override
+            public void changed(ObservableValue<? extends Contact> observable, Contact oldValue, Contact newValue) {
+                contactViewer.setContact(newValue);
+            }
+        });
+
         //Contact Viewer
         ScrollPane viewerPane = new ScrollPane();
-        ContactViewer contactViewer = new ContactViewer();
+        contactViewer = new ContactViewer();
         viewerPane.setContent(contactViewer);
 
         //Add elements to center

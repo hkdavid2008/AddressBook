@@ -11,6 +11,7 @@ public class Contact {
     private StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
     private StringProperty name = new SimpleStringProperty(this, "name", "");
     private StringProperty pseudonym = new SimpleStringProperty(this, "pseudonym", "");
+    private StringProperty website = new SimpleStringProperty(this, "website", "");
     private StringProperty hausePhoneNumber = new SimpleStringProperty(this, "hausePhoneNumber", "");
     private StringProperty faxPhoneNumber = new SimpleStringProperty(this, "faxPhoneNumber", "");
     private StringProperty pagerPhoneNumber = new SimpleStringProperty(this, "pagerPhoneNumber", "");
@@ -48,6 +49,18 @@ public class Contact {
         this.email.setValue(email);
         this.mobilePhoneNumber.setValue(mobilePhoneNumber);
         birthday = LocalDate.of(1997,10,7);
+    }
+
+    public String getWebsite() {
+        return website.get();
+    }
+
+    public StringProperty websiteProperty() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website.set(website);
     }
 
     public int getId() {
