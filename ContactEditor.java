@@ -73,6 +73,9 @@ public class ContactEditor {
     }
 
     public Contact getContact() {
+        if (editorController.formStatus==false) {
+            return null;
+        }
         if (contact==null) {
             contact = new Contact();
         }

@@ -8,11 +8,12 @@ import javafx.stage.Stage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ContactEditorController {
+    private boolean status = true;
+
     @FXML private Label errorLabel;
     @FXML private Button okButton;
     @FXML private Button cancelButton;
@@ -115,7 +116,7 @@ public class ContactEditorController {
     public String getWebsiteField() {
         return websiteField.getText();
     }
-    
+
     public String getOfficeField() {
         return officeField.getText();
     }
@@ -171,7 +172,7 @@ public class ContactEditorController {
     public LocalDate getBirthdayField() {
         return birthdayField.getValue();
     }
-    
+
     //Setters
 
     public void setFirstNameField(String firstName) {
@@ -258,10 +259,6 @@ public class ContactEditorController {
         this.companyAddressField.setText(companyAddress);
     }
 
-    public void setCompanyAddres(String companyAddres) {
-        this.companyAddres.setText(companyAddres);
-    }
-
     public void setCompanyPostalCodeField(String companyPostalCode) {
         this.companyPostalCodeField.setText(companyPostalCode);
     }
@@ -298,8 +295,9 @@ public class ContactEditorController {
         this.notesField.setText(notes);
     }
 
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    public static final ArrayList<String> errorList = new ArrayList<String>();
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    public boolean formStatus = false;
 
     private boolean hasMinData() {
         if (nameField.getText().isEmpty()==false || firstNameField.getText().isEmpty()==false || lastNameField.getText().isEmpty()==false) {
@@ -310,36 +308,26 @@ public class ContactEditorController {
     }
 
     private boolean validateEmail(TextField source) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(source.getText());
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(source.getText());
         return matcher.find();
     }
 
-    private void setError(String errorMsg, TextField field) {
+    private void setErrorInfo(String errorMsg) {
         errorLabel.setText(errorMsg);
-        errorList.add(errorMsg);
-        okButton.setDisable(true);
+
+    }
+
+    private void setErrorField(TextField field) {
         field.getStylesheets().add(getClass().getResource("ContactEditorStyle.css").toExternalForm());
     }
 
-    private void setOk(TextField field) {
+    private void setFieldOk(TextField field) {
         field.getStylesheets().clear();
-        if (errorList.isEmpty()==true) {
-            errorLabel.setText("");
-            okButton.setDisable(false);
-        } else {
-            errorLabel.setText(errorList.get(0));
-        }
     }
 
-    public void validateField(Event event) {
-        TextField source = (TextField)event.getSource();
-        if (source==emailField || source==secondEmailField) {
-            if (validateEmail(source)) {
-                setError("Błąd! Podano niepoprawny e-mail.", source);
-            } else {
-                setOk(source);
-            }
-        }
+    public boolean validateEmailField() {
+
+        return true;
     }
 
 
@@ -348,15 +336,45 @@ public class ContactEditorController {
         try {
             URL myURL = new URL(source.getText());
         } catch (MalformedURLException e) {
-            setError("Błąd! Podano niepoprawny e-mail.", source);
+            setErrorInfo("Błąd! Podano niepoprawny e-mail.");
         }
     }
 
     public void buttonClicked(ActionEvent event) {
         if (event.getSource() == cancelButton) {
+            formStatus = false;
             Stage myStage = (Stage)cancelButton.getScene().getWindow();
             myStage.close();
         } else {
+            if (hasMinData()==false) {
+                setErrorInfo("Wypełnij przynajmniej jedno z zaznaczonych pól");
+                setErrorField(nameField);
+                setErrorField(lastNameField);
+                setErrorField(firstNameField);
+                return;
+            } else {
+                setFieldOk(nameField);
+                setFieldOk(lastNameField);
+                setFieldOk(firstNameField);
+            }
+
+            if (emailField.getText().isEmpty()==false && validateEmail(emailField)==false) {
+                setErrorInfo("Błąd! Podano niepoprawny e-mail.");
+                setErrorField(emailField);
+                return;
+            } else {
+                setFieldOk(emailField);
+            }
+
+            if (secondEmailField.getText().isEmpty()==false && validateEmail(secondEmailField)==false) {
+                setErrorInfo("Błąd! Podano niepoprawny e-mail.");
+                setErrorField(secondEmailField);
+                return;
+            } else {
+                setFieldOk(secondEmailField);
+            }
+
+            formStatus =true;
             Stage myStage = (Stage)okButton.getScene().getWindow();
             myStage.close();
         }

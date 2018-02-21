@@ -1,5 +1,9 @@
 package addressbook;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -53,33 +57,62 @@ public class ContactViewer extends AnchorPane {
     public void setContact(Contact contact) {
         currentContact = contact;
 
+        currentContact.nameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.isEmpty()==false) {
+                    nameLabel.setText(newValue);
+                } else {
+                    nameLabel.setText(currentContact.getFirstName() + " " + currentContact.getLastName());
+                }
+            }
+        });
+
+        currentContact.firstNameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (currentContact.getName().isEmpty()) {
+                    nameLabel.setText(currentContact.getFirstName() + " " + currentContact.getLastName());
+                }
+            }
+        });
+
+        currentContact.lastNameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (currentContact.getName().isEmpty()) {
+                    nameLabel.setText(currentContact.getFirstName() + " " + currentContact.getLastName());
+                }
+            }
+        });
+
         if (currentContact.getName().isEmpty()==true) {
             nameLabel.setText(currentContact.getFirstName() + " " + currentContact.getLastName());
         } else {
             nameLabel.setText(currentContact.getName());
         }
 
-        lastNameLabel.setText(currentContact.getLastName());
-        firstNameLabel.setText(currentContact.getFirstName());
-        emailLabel.setText(currentContact.getEmail());
-        secondEmailLabel.setText(currentContact.getSecondEmail());
-        officeLabel.setText(currentContact.getOffice());
-        departamentLabel.setText(currentContact.getDepartament());
-        companyNameLabel.setText(currentContact.getCompanyName());
-        companyAddressLabel.setText(currentContact.getAddress());
-        companyWebsiteLabel.setText(currentContact.getCompanyWebsite());
-        workPhoneNumber.setText(currentContact.getWorkPhoneNumber());
-        hausePhoneNumberLabel.setText(currentContact.getHausePhoneNumber());
-        faxPhoneNumberLabel.setText(currentContact.getFaxPhoneNumber());
-        mobilePhoneNumberLabel.setText(currentContact.getMobilePhoneNumber());
-        pagerPhoneNumberLabel.setText(currentContact.getPagerPhoneNumber());
-        addressLabel.setText(currentContact.getAddress());
-        cityLabel.setText(currentContact.getCity());
-        voivodeshipLabel.setText(currentContact.getVoivodeship());
-        postalCodeLabel.setText(currentContact.getPostalCode());
-        websiteLabel.setText(currentContact.getWebsite());
-        //birthdayLabel.setText(currentContact);
-        info1Label.setText(currentContact.getInfo1());
-        info2Label.setText(currentContact.getInfo2());
+        lastNameLabel.textProperty().bind(currentContact.lastNameProperty());
+        firstNameLabel.textProperty().bind(currentContact.firstNameProperty());
+        emailLabel.textProperty().bind(currentContact.emailProperty());
+        secondEmailLabel.textProperty().bind(currentContact.secondEmailProperty());
+        officeLabel.textProperty().bind(currentContact.officeProperty());
+        departamentLabel.textProperty().bind(currentContact.departamentProperty());
+        companyNameLabel.textProperty().bind(currentContact.companyAddressProperty());
+        companyAddressLabel.textProperty().bind(currentContact.addressProperty());
+        companyWebsiteLabel.textProperty().bind(currentContact.companyWebsiteProperty());
+        workPhoneNumber.textProperty().bind(currentContact.workPhoneNumberProperty());
+        hausePhoneNumberLabel.textProperty().bind(currentContact.hausePhoneNumberProperty());
+        faxPhoneNumberLabel.textProperty().bind(currentContact.faxPhoneNumberProperty());
+        mobilePhoneNumberLabel.textProperty().bind(currentContact.mobilePhoneNumberProperty());
+        pagerPhoneNumberLabel.textProperty().bind(currentContact.pagerPhoneNumberProperty());
+        addressLabel.textProperty().bind(currentContact.addressProperty());
+        cityLabel.textProperty().bind(currentContact.cityProperty());
+        voivodeshipLabel.textProperty().bind(currentContact.voivodeshipProperty());
+        postalCodeLabel.textProperty().bind(currentContact.postalCodeProperty());
+        websiteLabel.textProperty().bind(currentContact.websiteProperty());
+        //birthdayLabel.textProperty().bind(currentContact);
+        info1Label.textProperty().bind(currentContact.info1Property());
+        info2Label.textProperty().bind(currentContact.info2Property());
     }
 }
