@@ -27,20 +27,21 @@ public class Program extends Application {
     private ContactViewer contactViewer;
     private WelcomeScreen welcomeScreen;
     private ScrollPane viewerPane;
-    private SQLiteConnect dbConnect = new SQLiteConnect();
+    private SQLiteConnect dbConnect = new SQLiteConnect("default.db");
 
 
     public ObservableList<Contact> getContats() {
-        ObservableList<Contact> list = FXCollections.observableArrayList();
-        list.add(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
-        list.add(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
-        list.add(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
+        ObservableList<Contact> list = dbConnect.getContactsList();
+        //ObservableList<Contact> list = FXCollections.observableArrayList();
+//        list.add(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
+//        list.add(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
+//        list.add(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return list;
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        dbConnect = new SQLiteConnect();
+        dbConnect = new SQLiteConnect("default.db");
         //Layout
         BorderPane pane = new BorderPane();
 
@@ -58,7 +59,7 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor();
                     if (newEditor.getContact()!=null) {
-                        contactList.getItems().add(newEditor.getContact());
+                        //contactList.getItems().add(newEditor.getContact());
                         dbConnect.newContact(newEditor.getContact());
                     }
                 } catch (IOException e) {
@@ -77,7 +78,14 @@ public class Program extends Application {
                 if (contactList.getSelectionModel().getSelectedItem()!=null) {
                     try {
                         ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
-                        newEditor.getContact();
+                        Contact updatedContact = newEditor.getContact();
+                        if (updatedContact!=null) {
+                            if (dbConnect.updateContact(updatedContact)==true) {
+                                System.out.println("Pomyślnie zaktualizowano kontakt.");
+                            } else {
+                                System.out.println("Błąd! Nie udało się zauktualizować kontaktu.");
+                            }
+                        }
                         //contactViewer.setContact();
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
@@ -94,7 +102,8 @@ public class Program extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (contactList.getSelectionModel().getSelectedItem()!=null) {
-                    contactList.getItems().remove(contactList.getSelectionModel().getSelectedItem());
+                    //contactList.getItems().remove(contactList.getSelectionModel().getSelectedItem());
+                    dbConnect.deleteContact(contactList.getSelectionModel().getSelectedItem());
                 }
             }
         });

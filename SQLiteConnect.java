@@ -1,13 +1,18 @@
 package addressbook;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 
 public class SQLiteConnect {
 
     private Connection c;
     private Statement statement;
+    private ObservableList<Contact> list = FXCollections.observableArrayList();
 
-    public SQLiteConnect() {
+    public SQLiteConnect(String path) {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (Exception e) {
@@ -15,8 +20,14 @@ public class SQLiteConnect {
             e.printStackTrace();
         }
 
+        String url = "jdbc:sqlite:" + path;
+
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:default.db");
+            c = DriverManager.getConnection(url);
+            if (c==null) {
+                DatabaseMetaData meta = c.getMetaData();
+                System.out.println("Utworzono nowy plik bazy danych.");
+            }
             statement = c.createStatement();
         } catch (Exception e) {
             System.err.println("Nie udało się nawiązać połączenia z bazą danych.");
@@ -29,6 +40,7 @@ public class SQLiteConnect {
                 "\tid\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tfirstName\tTEXT,\n" +
                 "\tlastName\tTEXT,\n" +
+                "\tname\tTEXT,\n" +
                 "\tpseudonym\tTEXT,\n" +
                 "\twebsite\tTEXT,\n" +
                 "\thausePhoneNumber\tTEXT,\n" +
@@ -42,6 +54,7 @@ public class SQLiteConnect {
                 "\tcity\tTEXT,\n" +
                 "\tvoivodeship\tTEXT,\n" +
                 "\tpostalCode\tTEXT,\n" +
+                "\tcountry\tTEXT,\n" +
                 "\tbirthday\tTEXT,\n" +
                 "\toffice\tTEXT,\n" +
                 "\tdepartament\tTEXT,\n" +
@@ -67,42 +80,198 @@ public class SQLiteConnect {
     }
 
     public boolean newContact(Contact contact) {
-        String sql = "INSERT INTO Contacts values (NULL, '"
-                + contact.getFirstName() + "','"
-                + contact.getLastName() + "','"
-                + contact.getPseudonym() + ","
-                + contact.getWebsite() + "','"
-                + contact.getHausePhoneNumber() + "','"
-                + contact.getFaxPhoneNumber() + "','"
-                + contact.getPagerPhoneNumber() + "','"
-                + contact.getEmail() + "','"
-                + contact.getMobilePhoneNumber() + "','"
-                + contact.getWorkPhoneNumber() + "','"
-                + contact.getSecondEmail() + "','"
-                + contact.getAddress() + "','"
-                + contact.getCity() + "','"
-                + contact.getVoivodeship() + "','"
-                + contact.getPostalCode() + "','"
-                + contact.getBirthday() + "','"
-                + contact.getOffice() + "','"
-                + contact.getDepartament() + "','"
-                + contact.getCompanyName() + "','"
-                + contact.getCompanyAddress() + "','"
-                + contact.getCompanyPostalCode() + "','"
-                + contact.getCompanyCountry() + "','"
-                + contact.getCompanyWebsite() + "','"
-                + contact.getInfo1() + "','"
-                + contact.getInfo2() + "','"
-                + contact.getInfo3() + "','"
-                + contact.getInfo4() + "','"
-                + contact.getNotes() + "');";
+        String sql = "INSERT INTO Contacts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try {
-            statement.executeUpdate(sql);
+            PreparedStatement pre = c.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+            pre.setString(1, contact.getFirstName());
+            pre.setString(2, contact.getLastName());
+            pre.setString(3, contact.getName());
+            pre.setString(4, contact.getPseudonym());
+            pre.setString(5, contact.getWebsite());
+            pre.setString(6, contact.getHausePhoneNumber());
+            pre.setString(7, contact.getFaxPhoneNumber());
+            pre.setString(8, contact.getPagerPhoneNumber());
+            pre.setString(9, contact.getEmail());
+            pre.setString(10, contact.getMobilePhoneNumber());
+            pre.setString(11, contact.getWorkPhoneNumber());
+            pre.setString(12, contact.getSecondEmail());
+            pre.setString(13, contact.getAddress());
+            pre.setString(14, contact.getCity());
+            pre.setString(15, contact.getVoivodeship());
+            pre.setString(16, contact.getPostalCode());
+            pre.setString(17, contact.getCountry());
+            if (contact.getBirthday()==null) {
+                pre.setString(18, "");
+            } else {
+                pre.setString(18, contact.getBirthday().toString());
+            }
+            pre.setString(19, contact.getOffice());
+            pre.setString(20, contact.getDepartament());
+            pre.setString(21, contact.getCompanyName());
+            pre.setString(22, contact.getCompanyAddress());
+            pre.setString(23, contact.getCompanyPostalCode());
+            pre.setString(24, contact.getCompanyCountry());
+            pre.setString(25, contact.getCompanyWebsite());
+            pre.setString(26, contact.getInfo1());
+            pre.setString(27, contact.getInfo2());
+            pre.setString(28, contact.getInfo3());
+            pre.setString(29, contact.getInfo4());
+            pre.setString(30, contact.getNotes());
+            pre.executeUpdate();
+            ResultSet keys = pre.getGeneratedKeys();
+            if (keys.next()) {
+                contact.setId(keys.getInt(1));
+            }
+            list.add(contact);
+            System.out.println("Pomyślnie wstawiono wpis id = " + keys.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateContact(Contact contact) {
+        if (contact.getId()==-1) {
+            return false;
+        }
+        String updateSql = "UPDATE Contacts SET " +
+                "firstName = ?, " +
+                "lastName = ?, " +
+                "name = ?, " +
+                "pseudonym = ?, " +
+                "website = ?, " +
+                "hausePhoneNumber = ?, " +
+                "faxPhoneNumber = ?, " +
+                "pagerPhoneNumber = ?, " +
+                "email = ?, " +
+                "mobilePhoneNumber = ?, " +
+                "workPhoneNumber = ?, " +
+                "secondEmail = ?, " +
+                "address = ?, " +
+                "city = ?, " +
+                "voivodeship = ?, " +
+                "postalCode = ?, " +
+                "country = ?, " +
+                "birthday = ?, " +
+                "office = ?, " +
+                "departament = ?, " +
+                "companyName = ?, " +
+                "companyAddress = ?, " +
+                "companyPostalCode = ?, " +
+                "companyCountry = ?, " +
+                "companyWebsite = ?, " +
+                "info1 = ?, " +
+                "info2 = ?, " +
+                "info3 = ?, " +
+                "info4 = ?, " +
+                "notes = ? " +
+                "WHERE id = " + contact.getId() + ";";
+        try {
+            PreparedStatement stmtUpdate = c.prepareStatement(updateSql);
+            stmtUpdate.setString(1, contact.getFirstName());
+            stmtUpdate.setString(2, contact.getLastName());
+            stmtUpdate.setString(3, contact.getName());
+            stmtUpdate.setString(4, contact.getPseudonym());
+            stmtUpdate.setString(5, contact.getWebsite());
+            stmtUpdate.setString(6, contact.getHausePhoneNumber());
+            stmtUpdate.setString(7, contact.getFaxPhoneNumber());
+            stmtUpdate.setString(8, contact.getPagerPhoneNumber());
+            stmtUpdate.setString(9, contact.getEmail());
+            stmtUpdate.setString(10, contact.getMobilePhoneNumber());
+            stmtUpdate.setString(11, contact.getWorkPhoneNumber());
+            stmtUpdate.setString(12, contact.getSecondEmail());
+            stmtUpdate.setString(13, contact.getAddress());
+            stmtUpdate.setString(14, contact.getCity());
+            stmtUpdate.setString(15, contact.getVoivodeship());
+            stmtUpdate.setString(16, contact.getPostalCode());
+            stmtUpdate.setString(17, contact.getCountry());
+            if (contact.getBirthday()==null) {
+                stmtUpdate.setString(18, "");
+            } else {
+                stmtUpdate.setString(18, contact.getBirthday().toString());
+            }
+            stmtUpdate.setString(19, contact.getOffice());
+            stmtUpdate.setString(20, contact.getDepartament());
+            stmtUpdate.setString(21, contact.getCompanyName());
+            stmtUpdate.setString(22, contact.getCompanyAddress());
+            stmtUpdate.setString(23, contact.getCompanyPostalCode());
+            stmtUpdate.setString(24, contact.getCompanyCountry());
+            stmtUpdate.setString(25, contact.getCompanyWebsite());
+            stmtUpdate.setString(26, contact.getInfo1());
+            stmtUpdate.setString(27, contact.getInfo2());
+            stmtUpdate.setString(28, contact.getInfo3());
+            stmtUpdate.setString(29, contact.getInfo4());
+            stmtUpdate.setString(30, contact.getNotes());
+            stmtUpdate.executeUpdate();
+        } catch (SQLException updateerror) {
+            updateerror.printStackTrace();
             return false;
         }
 
         return true;
     }
+
+    public ObservableList<Contact> getContactsList() {
+        try {
+            Statement selectStmt = c.createStatement();
+            ResultSet results = selectStmt.executeQuery("SELECT * FROM Contacts;");
+            list.clear();
+            while (results.next()) {
+                Contact newContact = new Contact();
+                newContact.setId(results.getInt("id"));
+                newContact.setFirstName(results.getString("firstName"));
+                newContact.setLastName(results.getString("lastName"));
+                newContact.setName(results.getString("name"));
+                newContact.setPseudonym(results.getString("pseudonym"));
+                newContact.setWebsite(results.getString("website"));
+                newContact.setHausePhoneNumber(results.getString("hausePhoneNumber"));
+                newContact.setFaxPhoneNumber(results.getString("faxPhoneNumber"));
+                newContact.setPagerPhoneNumber(results.getString("pagerPhoneNumber"));
+                newContact.setEmail(results.getString("email"));
+                newContact.setMobilePhoneNumber(results.getString("mobilePhoneNumber"));
+                newContact.setWorkPhoneNumber(results.getString("workPhoneNumber"));
+                newContact.setSecondEmail(results.getString("secondEmail"));
+                newContact.setAddress(results.getString("address"));
+                newContact.setCity(results.getString("city"));
+                newContact.setVoivodeship(results.getString("voivodeship"));
+                newContact.setPostalCode(results.getString("postalCode"));
+                newContact.setCountry(results.getString("country"));
+                //newContact.setBirthday(results.getString("birthday"));    //TODO poprawić datę
+                newContact.setOffice(results.getString("office"));
+                newContact.setDepartament(results.getString("departament"));
+                newContact.setCompanyName(results.getString("companyName"));
+                newContact.setCompanyAddress(results.getString("companyAddress"));
+                newContact.setCompanyPostalCode(results.getString("companyPostalCode"));
+                newContact.setCompanyCountry(results.getString("companyCountry"));
+                newContact.setCompanyWebsite(results.getString("companyWebsite"));
+                newContact.setInfo1(results.getString("info1"));
+                newContact.setInfo2(results.getString("info2"));
+                newContact.setInfo3(results.getString("info3"));
+                newContact.setInfo4(results.getString("info4"));
+                newContact.setNotes(results.getString("notes"));
+                list.add(newContact);
+            }
+        } catch (SQLException selecterror){
+            selecterror.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean deleteContact(Contact contact) {
+        if (contact.getId()==-1) {
+            return false;
+        }
+        try {
+            PreparedStatement deleteStmt = c.prepareStatement("DELETE FROM Contacts WHERE id = ?");
+            deleteStmt.setInt(1,contact.getId());
+            deleteStmt.executeUpdate();
+        } catch (SQLException deleteerror) {
+            deleteerror.printStackTrace();
+            return false;
+        }
+        getContactsList();
+        return true;
+    }
+
 }

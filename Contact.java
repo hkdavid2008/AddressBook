@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 import java.time.LocalDate;
 
 public class Contact {
-    private int id;
+    private int id=-1;
     private StringProperty firstName = new SimpleStringProperty(this, "firstName", "");
     private StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
     private StringProperty name = new SimpleStringProperty(this, "name", "");
