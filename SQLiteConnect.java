@@ -208,7 +208,6 @@ public class SQLiteConnect {
             updateerror.printStackTrace();
             return false;
         }
-
         return true;
     }
 
@@ -266,11 +265,11 @@ public class SQLiteConnect {
             PreparedStatement deleteStmt = c.prepareStatement("DELETE FROM Contacts WHERE id = ?");
             deleteStmt.setInt(1,contact.getId());
             deleteStmt.executeUpdate();
+            list.remove(contact);
         } catch (SQLException deleteerror) {
             deleteerror.printStackTrace();
             return false;
         }
-        getContactsList();
         return true;
     }
 

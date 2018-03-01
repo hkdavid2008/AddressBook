@@ -23,19 +23,17 @@ public class Program extends Application {
         launch(args);
     }
     private TableView<Contact> contactList;
-    private FilteredList<Contact> filteredList;
     private ContactViewer contactViewer;
     private WelcomeScreen welcomeScreen;
     private ScrollPane viewerPane;
     private SQLiteConnect dbConnect = new SQLiteConnect("default.db");
 
-
     public ObservableList<Contact> getContats() {
         ObservableList<Contact> list = dbConnect.getContactsList();
         //ObservableList<Contact> list = FXCollections.observableArrayList();
-//        list.add(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
-//        list.add(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
-//        list.add(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
+        dbConnect.newContact(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
+        dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
+        dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return list;
     }
 
@@ -68,6 +66,7 @@ public class Program extends Application {
             }
         });
 
+        //Button - Delete contact
         Button modifyContactButton = new Button();
         modifyContactButton.setDisable(true);
         modifyContactButton.setText("Modyfikuj");
@@ -94,6 +93,7 @@ public class Program extends Application {
             }
         });
 
+        //Button - Modify contact
         Button deleteContactButton = new Button();
         deleteContactButton.setDisable(true);
         deleteContactButton.setText("Usuń");
@@ -102,8 +102,11 @@ public class Program extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (contactList.getSelectionModel().getSelectedItem()!=null) {
-                    //contactList.getItems().remove(contactList.getSelectionModel().getSelectedItem());
-                    dbConnect.deleteContact(contactList.getSelectionModel().getSelectedItem());
+                    Contact toDelete = contactList.getSelectionModel().getSelectedItem();
+                    contactList.getSelectionModel().selectPrevious();
+                    if (dbConnect.deleteContact(toDelete)==false) {
+                        contactList.getSelectionModel().selectNext();
+                    }
                 }
             }
         });
@@ -117,7 +120,24 @@ public class Program extends Application {
         searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                ObservableList<Contact> data = contactList.getItems();
+                if (oldValue != null && (newValue.length() < oldValue.length())) {
+                    contactList.setItems(data);
+                }
+                String value = newValue.toLowerCase();
+                ObservableList<Contact> subentries = FXCollections.observableArrayList();
 
+                long count = contactList.getColumns().stream().count();
+                for (int i = 0; i < contactList.getItems().size(); i++) {
+                    for (int j = 0; j < count; j++) {
+                        String entry = "" + contactList.getColumns().get(j).getCellData(i);
+                        if (entry.toLowerCase().contains(value)) {
+                            subentries.add(contactList.getItems().get(i));
+                            break;
+                        }
+                    }
+                }
+                contactList.setItems(subentries);
             }
         });
 
@@ -160,10 +180,16 @@ public class Program extends Application {
         contactList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contact>() {
             @Override
             public void changed(ObservableValue<? extends Contact> observable, Contact oldValue, Contact newValue) {
-                viewerPane.setContent(contactViewer);
-                modifyContactButton.setDisable(false);
-                deleteContactButton.setDisable(false);
-                contactViewer.setContact(newValue);
+                if (newValue==null) {
+                    viewerPane.setContent(welcomeScreen);
+                    modifyContactButton.setDisable(true);
+                    deleteContactButton.setDisable(true);
+                } else {
+                    viewerPane.setContent(contactViewer);
+                    modifyContactButton.setDisable(false);
+                    deleteContactButton.setDisable(false);
+                    contactViewer.setContact(newValue);
+                }
             }
         });
 
