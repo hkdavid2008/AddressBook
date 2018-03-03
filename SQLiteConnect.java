@@ -3,14 +3,14 @@ package addressbook;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 
 public class SQLiteConnect {
 
     private Connection c;
     private Statement statement;
-    private ObservableList<Contact> list = FXCollections.observableArrayList();
+    private ObservableList<Contact> contactList = FXCollections.observableArrayList();
+    private ObservableList<MailingList> mailingLists = FXCollections.observableArrayList();
 
     public SQLiteConnect(String path) {
         try {
@@ -32,10 +32,10 @@ public class SQLiteConnect {
         } catch (Exception e) {
             System.err.println("Nie udało się nawiązać połączenia z bazą danych.");
         }
-        createTable();
+        createTables();
     }
 
-    private boolean createTable() {
+    private boolean createTables() {
         String sql = "CREATE TABLE IF NOT EXISTS Contacts (\n" +
                 "\tid\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tfirstName\tTEXT,\n" +
@@ -67,10 +67,16 @@ public class SQLiteConnect {
                 "\tinfo2\tTEXT,\n" +
                 "\tinfo3\tTEXT,\n" +
                 "\tinfo4\tTEXT,\n" +
-                "\tnotes\tTEXT\n" +
+                "\tnotes\tTEXT,\n" +
+                "\tmailingListId\tINTEGER\n" +
+                ");";
+        String sql2 = "CREATE TABLE IF NOT EXISTS MailingLists (\n" +
+                "\tid\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
+                "\tname\tTEXT\n" +
                 ");";
         try {
             statement.execute(sql);
+            statement.execute(sql2);
         } catch (SQLException e) {
             System.err.println("Nie udało się utworzyć tabeli.");
             e.printStackTrace();
@@ -80,7 +86,7 @@ public class SQLiteConnect {
     }
 
     public boolean newContact(Contact contact) {
-        String sql = "INSERT INTO Contacts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO Contacts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try {
             PreparedStatement pre = c.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pre.setString(1, contact.getFirstName());
@@ -117,12 +123,13 @@ public class SQLiteConnect {
             pre.setString(28, contact.getInfo3());
             pre.setString(29, contact.getInfo4());
             pre.setString(30, contact.getNotes());
+            pre.setInt(31, contact.getMailingListId());
             pre.executeUpdate();
             ResultSet keys = pre.getGeneratedKeys();
             if (keys.next()) {
                 contact.setId(keys.getInt(1));
             }
-            list.add(contact);
+            contactList.add(contact);
             System.out.println("Pomyślnie wstawiono wpis id = " + keys.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -165,7 +172,8 @@ public class SQLiteConnect {
                 "info2 = ?, " +
                 "info3 = ?, " +
                 "info4 = ?, " +
-                "notes = ? " +
+                "notes = ?, " +
+                "mailingListId = ? " +
                 "WHERE id = " + contact.getId() + ";";
         try {
             PreparedStatement stmtUpdate = c.prepareStatement(updateSql);
@@ -203,6 +211,7 @@ public class SQLiteConnect {
             stmtUpdate.setString(28, contact.getInfo3());
             stmtUpdate.setString(29, contact.getInfo4());
             stmtUpdate.setString(30, contact.getNotes());
+            stmtUpdate.setInt(31,contact.getMailingListId());
             stmtUpdate.executeUpdate();
         } catch (SQLException updateerror) {
             updateerror.printStackTrace();
@@ -215,7 +224,7 @@ public class SQLiteConnect {
         try {
             Statement selectStmt = c.createStatement();
             ResultSet results = selectStmt.executeQuery("SELECT * FROM Contacts;");
-            list.clear();
+            contactList.clear();
             while (results.next()) {
                 Contact newContact = new Contact();
                 newContact.setId(results.getInt("id"));
@@ -249,12 +258,13 @@ public class SQLiteConnect {
                 newContact.setInfo3(results.getString("info3"));
                 newContact.setInfo4(results.getString("info4"));
                 newContact.setNotes(results.getString("notes"));
-                list.add(newContact);
+                newContact.setId(results.getInt("mailingListId"));
+                contactList.add(newContact);
             }
         } catch (SQLException selecterror){
             selecterror.printStackTrace();
         }
-        return list;
+        return contactList;
     }
 
     public boolean deleteContact(Contact contact) {
@@ -265,12 +275,79 @@ public class SQLiteConnect {
             PreparedStatement deleteStmt = c.prepareStatement("DELETE FROM Contacts WHERE id = ?");
             deleteStmt.setInt(1,contact.getId());
             deleteStmt.executeUpdate();
-            list.remove(contact);
+            contactList.remove(contact);
             System.out.println("Pomyślnie usunięto kontakt id = " + contact.getId());
         } catch (SQLException deleteerror) {
             deleteerror.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    //Mailing lists
+    public boolean newMailingList(String name) {
+        String sql = "INSERT INTO MailingLists VALUES (NULL, ?);";
+        try {
+            PreparedStatement pre = c.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+            pre.setString(1, name);
+            pre.executeUpdate();
+            ResultSet keys = pre.getGeneratedKeys();
+            getMailingLists();
+            System.out.println("Pomyślnie wstawiono listę mailingową id = " + keys.getInt(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateMailingList(MailingList list) {
+        if (list.getId()==0) {
+            return false;
+        }
+        String updateSql = "UPDATE MailingLists SET " +
+                "name = ? " +
+                "WHERE id = " + list.getId() + ";";
+        try {
+            PreparedStatement stmtUpdate = c.prepareStatement(updateSql);
+            stmtUpdate.setString(1, list.getName());
+            stmtUpdate.executeUpdate();
+        } catch (SQLException updateerror) {
+            updateerror.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteMailingList(MailingList list) {
+        if (list.getId()==0) {
+            return false;
+        }
+        try {
+            PreparedStatement deleteStmt = c.prepareStatement("DELETE FROM MailingLists WHERE id = ?");
+            deleteStmt.setInt(1,list.getId());
+            deleteStmt.executeUpdate();
+            contactList.remove(list);
+            System.out.println("Pomyślnie usunięto listę mailingową id = " + list.getId());
+        } catch (SQLException deleteerror) {
+            deleteerror.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public ObservableList<MailingList> getMailingLists() {
+        try {
+            Statement selectStmt = c.createStatement();
+            ResultSet results = selectStmt.executeQuery("SELECT * FROM MailingLists;");
+            contactList.clear();
+            while (results.next()) {
+                MailingList newList = new MailingList(results.getInt(1), results.getString(2));
+                mailingLists.add(newList);
+            }
+        } catch (SQLException selecterror){
+            selecterror.printStackTrace();
+        }
+        return mailingLists;
     }
 }

@@ -62,7 +62,6 @@ public class Program extends Application {
                 try {
                     ContactEditor newEditor = new ContactEditor();
                     if (newEditor.getContact()!=null) {
-                        //contactList.getItems().add(newEditor.getContact());
                         dbConnect.newContact(newEditor.getContact());
                     }
                 } catch (IOException e) {
@@ -145,29 +144,6 @@ public class Program extends Application {
             }
         });
 
-//        searchField.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if (oldValue != null && (newValue.length() < oldValue.length())) {
-//                    contactList.setItems(getContats());
-//                }
-//                String value = newValue.toLowerCase();
-//                ObservableList<Contact> subentries = FXCollections.observableArrayList();
-//
-//                long count = contactList.getColumns().stream().count();
-//                for (int i = 0; i < contactList.getItems().size(); i++) {
-//                    for (int j = 0; j < count; j++) {
-//                        String entry = "" + contactList.getColumns().get(j).getCellData(i);
-//                        if (entry.toLowerCase().contains(value)) {
-//                            subentries.add(contactList.getItems().get(i));
-//                            break;
-//                        }
-//                    }
-//                }
-//                contactList.setItems(subentries);
-//            }
-//        });
-
         //Add buttons to topbar
         topbar.getChildren().addAll(newContactButton, modifyContactButton, deleteContactButton,space, searchField);
         pane.setTop(topbar);
@@ -177,8 +153,10 @@ public class Program extends Application {
 
         //Address books
         Node addressBookIcon = new ImageView(new Image(getClass().getResourceAsStream("addressbook-icon-small.png")));
-        addressBookIcon.resize(10,10);
-        TreeItem<String> defaultAddressBook = new TreeItem<String>("Wszystkie książki adresowe", addressBookIcon);
+        TreeItem<String> defaultAddressBook = new TreeItem<String>("Wszystkie adresy", addressBookIcon);
+        defaultAddressBook.setExpanded(true);
+        for
+
         TreeView<String> bookList = new TreeView<String>(defaultAddressBook);
 
         center.getItems().add(bookList);

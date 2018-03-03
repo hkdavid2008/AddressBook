@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public class Contact {
     private int id=-1;
+    private int mailingListId;
     private StringProperty firstName = new SimpleStringProperty(this, "firstName", "");
     private StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
     private StringProperty name = new SimpleStringProperty(this, "name", "");
@@ -49,6 +50,14 @@ public class Contact {
         this.email.setValue(email);
         this.mobilePhoneNumber.setValue(mobilePhoneNumber);
         birthday = LocalDate.of(1997,10,7);
+    }
+
+    public int getMailingListId() {
+        return mailingListId;
+    }
+
+    public void setMailingListId(int mailingListId) {
+        this.mailingListId = mailingListId;
     }
 
     public String getWebsite() {
