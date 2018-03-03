@@ -4,18 +4,23 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.function.Predicate;
 
 public class Program extends Application {
 
@@ -30,16 +35,16 @@ public class Program extends Application {
 
     public ObservableList<Contact> getContats() {
         ObservableList<Contact> list = dbConnect.getContactsList();
-        //ObservableList<Contact> list = FXCollections.observableArrayList();
         dbConnect.newContact(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
         dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
         dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return list;
     }
 
+    FilteredList<Contact> filteredList = new FilteredList<Contact>(getContats());
+
     @Override
     public void start(Stage primaryStage) throws IOException {
-        dbConnect = new SQLiteConnect("default.db");
         //Layout
         BorderPane pane = new BorderPane();
 
@@ -120,26 +125,48 @@ public class Program extends Application {
         searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                ObservableList<Contact> data = contactList.getItems();
-                if (oldValue != null && (newValue.length() < oldValue.length())) {
-                    contactList.setItems(data);
-                }
-                String value = newValue.toLowerCase();
-                ObservableList<Contact> subentries = FXCollections.observableArrayList();
-
-                long count = contactList.getColumns().stream().count();
-                for (int i = 0; i < contactList.getItems().size(); i++) {
-                    for (int j = 0; j < count; j++) {
-                        String entry = "" + contactList.getColumns().get(j).getCellData(i);
-                        if (entry.toLowerCase().contains(value)) {
-                            subentries.add(contactList.getItems().get(i));
-                            break;
+                filteredList.setPredicate(new Predicate<Contact>() {
+                    @Override
+                    public boolean test(Contact contact) {
+                        if (newValue==null | newValue.isEmpty()==true) {
+                            return true;
                         }
+
+                        long count = contactList.getColumns().stream().count();
+                        for (int j = 0; j < count; j++) {
+                            String entry = "" + contactList.getColumns().get(j).getCellData(contact);
+                            if (entry.toLowerCase().contains(newValue.toLowerCase())) {
+                                return true;
+                            }
+                        }
+                        return false;
                     }
-                }
-                contactList.setItems(subentries);
+                });
             }
         });
+
+//        searchField.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (oldValue != null && (newValue.length() < oldValue.length())) {
+//                    contactList.setItems(getContats());
+//                }
+//                String value = newValue.toLowerCase();
+//                ObservableList<Contact> subentries = FXCollections.observableArrayList();
+//
+//                long count = contactList.getColumns().stream().count();
+//                for (int i = 0; i < contactList.getItems().size(); i++) {
+//                    for (int j = 0; j < count; j++) {
+//                        String entry = "" + contactList.getColumns().get(j).getCellData(i);
+//                        if (entry.toLowerCase().contains(value)) {
+//                            subentries.add(contactList.getItems().get(i));
+//                            break;
+//                        }
+//                    }
+//                }
+//                contactList.setItems(subentries);
+//            }
+//        });
 
         //Add buttons to topbar
         topbar.getChildren().addAll(newContactButton, modifyContactButton, deleteContactButton,space, searchField);
@@ -149,7 +176,10 @@ public class Program extends Application {
         SplitPane center = new SplitPane();
 
         //Address books
-        TreeView<String> bookList = new TreeView<String>();
+        Node addressBookIcon = new ImageView(new Image(getClass().getResourceAsStream("addressbook-icon-small.png")));
+        addressBookIcon.resize(10,10);
+        TreeItem<String> defaultAddressBook = new TreeItem<String>("Wszystkie książki adresowe", addressBookIcon);
+        TreeView<String> bookList = new TreeView<String>(defaultAddressBook);
 
         center.getItems().add(bookList);
 
@@ -174,7 +204,7 @@ public class Program extends Application {
         TableColumn<Contact,String> companyCol = new TableColumn("Firma");
         companyCol.setCellValueFactory(new PropertyValueFactory<>("companyName"));
 
-        contactList.setItems(getContats());
+        contactList.setItems(filteredList);
         contactList.getColumns().addAll(firstNameCol,lastNameCol,phoneNumberCol,emailCol, companyCol);
 
         contactList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contact>() {

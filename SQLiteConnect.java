@@ -266,11 +266,11 @@ public class SQLiteConnect {
             deleteStmt.setInt(1,contact.getId());
             deleteStmt.executeUpdate();
             list.remove(contact);
+            System.out.println("Pomyślnie usunięto kontakt id = " + contact.getId());
         } catch (SQLException deleteerror) {
             deleteerror.printStackTrace();
             return false;
         }
         return true;
     }
-
 }
