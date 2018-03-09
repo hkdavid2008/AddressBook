@@ -111,7 +111,7 @@ public class ContactViewer extends AnchorPane {
         voivodeshipLabel.textProperty().bind(currentContact.voivodeshipProperty());
         postalCodeLabel.textProperty().bind(currentContact.postalCodeProperty());
         websiteLabel.textProperty().bind(currentContact.websiteProperty());
-        //birthdayLabel.textProperty().bind(currentContact);
+        //birthdayLabel.textProperty().bind(currentContact);        //TODO poprawić datę
         info1Label.textProperty().bind(currentContact.info1Property());
         info2Label.textProperty().bind(currentContact.info2Property());
     }

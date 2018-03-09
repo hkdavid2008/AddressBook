@@ -374,7 +374,7 @@ public class ContactEditorController {
                 setFieldOk(secondEmailField);
             }
 
-            formStatus =true;
+            formStatus = true;
             Stage myStage = (Stage)okButton.getScene().getWindow();
             myStage.close();
         }

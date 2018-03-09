@@ -1,13 +1,14 @@
 package addressbook;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
 
 public class Contact {
-    private int id=-1;
-    private int mailingListId;
+    private SimpleIntegerProperty id = new SimpleIntegerProperty(this, "id", -1);
+    private SimpleIntegerProperty mailingListId = new SimpleIntegerProperty(this, "mailingListId", -1);
     private StringProperty firstName = new SimpleStringProperty(this, "firstName", "");
     private StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
     private StringProperty name = new SimpleStringProperty(this, "name", "");
@@ -52,12 +53,28 @@ public class Contact {
         birthday = LocalDate.of(1997,10,7);
     }
 
+    public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
     public int getMailingListId() {
+        return mailingListId.get();
+    }
+
+    public SimpleIntegerProperty mailingListIdProperty() {
         return mailingListId;
     }
 
     public void setMailingListId(int mailingListId) {
-        this.mailingListId = mailingListId;
+        this.mailingListId.set(mailingListId);
     }
 
     public String getWebsite() {
@@ -70,14 +87,6 @@ public class Contact {
 
     public void setWebsite(String website) {
         this.website.set(website);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {

@@ -227,7 +227,6 @@ public class SQLiteConnect {
             contactList.clear();
             while (results.next()) {
                 Contact newContact = new Contact();
-                newContact.setId(results.getInt("id"));
                 newContact.setFirstName(results.getString("firstName"));
                 newContact.setLastName(results.getString("lastName"));
                 newContact.setName(results.getString("name"));
@@ -259,6 +258,10 @@ public class SQLiteConnect {
                 newContact.setInfo4(results.getString("info4"));
                 newContact.setNotes(results.getString("notes"));
                 newContact.setId(results.getInt("mailingListId"));
+                newContact.setId(results.getInt("id"));
+                if (newContact.getId()>0) {
+                    contactList.add(newContact);
+                }
                 contactList.add(newContact);
             }
         } catch (SQLException selecterror){
@@ -312,6 +315,7 @@ public class SQLiteConnect {
             PreparedStatement stmtUpdate = c.prepareStatement(updateSql);
             stmtUpdate.setString(1, list.getName());
             stmtUpdate.executeUpdate();
+            System.out.println("Pomyślnie zaktualizowano listę mailingową");
         } catch (SQLException updateerror) {
             updateerror.printStackTrace();
             return false;
@@ -340,7 +344,7 @@ public class SQLiteConnect {
         try {
             Statement selectStmt = c.createStatement();
             ResultSet results = selectStmt.executeQuery("SELECT * FROM MailingLists;");
-            contactList.clear();
+            mailingLists.clear();
             while (results.next()) {
                 MailingList newList = new MailingList(results.getInt(1), results.getString(2));
                 mailingLists.add(newList);

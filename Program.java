@@ -4,11 +4,12 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -17,9 +18,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Program extends Application {
@@ -31,20 +37,52 @@ public class Program extends Application {
     private ContactViewer contactViewer;
     private WelcomeScreen welcomeScreen;
     private ScrollPane viewerPane;
+    private TreeView<MailingList> bookList;
     private SQLiteConnect dbConnect = new SQLiteConnect("default.db");
 
-    public ObservableList<Contact> getContats() {
-        ObservableList<Contact> list = dbConnect.getContactsList();
+    private ObservableList<Contact> getContats() {
         dbConnect.newContact(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
         dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
         dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
-        return list;
+        return dbConnect.getContactsList();
+    }
+
+    private TreeView<MailingList> getMailingLists() {
+        TreeItem<MailingList> root = createNode(new MailingList(-1, "Wszystkie adresy"));
+        return new TreeView<MailingList>(root);
+    }
+
+    private TreeItem<MailingList> createNode(MailingList list) {
+        return new TreeItem<MailingList>(list) {
+            @Override
+            public boolean isLeaf() {
+                if (list.getId()==-1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public ObservableList<TreeItem<MailingList>> getChildren() {
+                System.out.println(list.getName());
+                ObservableList<TreeItem<MailingList>> observableList = FXCollections.observableArrayList();
+                if (list.getId()==-1) {
+                    for (MailingList newList : dbConnect.getMailingLists()) {
+                        TreeItem<MailingList> item = new TreeItem<MailingList>(newList);
+                        observableList.add(item);
+                    }
+                }
+                return observableList;
+            }
+        };
     }
 
     FilteredList<Contact> filteredList = new FilteredList<Contact>(getContats());
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         //Layout
         BorderPane pane = new BorderPane();
 
@@ -115,6 +153,26 @@ public class Program extends Application {
             }
         });
 
+        Button newMailingListButton = new Button();
+        newMailingListButton.setText("Nowa lista dystrybucyjna");
+        newMailingListButton.setPrefSize(150,25);
+        newMailingListButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog nameDialog = new TextInputDialog();
+                nameDialog.setTitle("Nowa lista dystrybucyjna");
+                nameDialog.setHeaderText("Podaj nazwę listy dystrybucyjnej");
+                nameDialog.setContentText("Nazwa: ");
+                Optional<String> result = nameDialog.showAndWait();
+                if (result.isPresent()==true) {
+                    if (result.get().isEmpty()==false) {
+                        dbConnect.newMailingList(result.get());
+                        bookList.refresh();
+                    }
+                }
+            }
+        });
+
         //Add space
         Region space = new Region();
         topbar.setHgrow(space, Priority.ALWAYS);
@@ -145,7 +203,7 @@ public class Program extends Application {
         });
 
         //Add buttons to topbar
-        topbar.getChildren().addAll(newContactButton, modifyContactButton, deleteContactButton,space, searchField);
+        topbar.getChildren().addAll(newContactButton, modifyContactButton, deleteContactButton, newMailingListButton, space, searchField);
         pane.setTop(topbar);
 
         //Center layout
@@ -153,11 +211,15 @@ public class Program extends Application {
 
         //Address books
         Node addressBookIcon = new ImageView(new Image(getClass().getResourceAsStream("addressbook-icon-small.png")));
-        TreeItem<String> defaultAddressBook = new TreeItem<String>("Wszystkie adresy", addressBookIcon);
-        defaultAddressBook.setExpanded(true);
-        for
 
-        TreeView<String> bookList = new TreeView<String>(defaultAddressBook);
+        bookList = getMailingLists();
+        bookList.setEditable(true);
+        bookList.setCellFactory(new Callback<TreeView<MailingList>, TreeCell<MailingList>>() {
+            @Override
+            public TreeCell<MailingList> call(TreeView<MailingList> param) {
+                return new MailingListCell();
+            }
+        });
 
         center.getItems().add(bookList);
 
@@ -224,4 +286,78 @@ public class Program extends Application {
         primaryStage.setScene(new Scene(pane,1200,750));
         primaryStage.show();
     }
+
+    private final class MailingListCell extends TreeCell<MailingList> {
+        private TextField editField;
+
+        public MailingListCell() {
+
+        }
+
+        @Override
+        public void startEdit() {
+            super.startEdit();
+            if (getTreeItem().isLeaf()==true) {
+                if (editField==null) {
+                    createEditField();
+                }
+                setText(null);
+                setGraphic(editField);
+                editField.selectAll();
+            }
+        }
+
+        private void saveChange(String newText) {
+            String oldText = getItem().getName();
+            getItem().setName(newText);
+            if (dbConnect.updateMailingList(getItem())==false) {
+                getItem().setName(oldText);
+            }
+            commitEdit(getItem());
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+            setText(getItem().getName());
+            setGraphic(getTreeItem().getGraphic());
+        }
+
+        @Override
+        protected void updateItem(MailingList item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    if (editField!= null) {
+                        editField.setText(getItem().getName());
+                    }
+                    setText(null);
+                    setGraphic(editField);
+                } else {
+                    setText(getItem().getName());
+                    setGraphic(getTreeItem().getGraphic());
+                }
+            }
+        }
+
+        private void createEditField() {
+
+            editField = new TextField(getItem().getName());
+            editField.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (event.getCode()==KeyCode.ENTER) {
+                        saveChange(editField.getText());
+                    } else if (event.getCode()==KeyCode.ESCAPE) {
+                        cancelEdit();
+                    }
+                }
+            });
+        }
+    }
+
 }
