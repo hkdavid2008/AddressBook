@@ -262,7 +262,6 @@ public class SQLiteConnect {
                 if (newContact.getId()>0) {
                     contactList.add(newContact);
                 }
-                contactList.add(newContact);
             }
         } catch (SQLException selecterror){
             selecterror.printStackTrace();

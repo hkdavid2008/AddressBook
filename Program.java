@@ -7,9 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -18,13 +16,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -143,11 +141,12 @@ public class Program extends Application {
         deleteContactButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (contactList.getSelectionModel().getSelectedItem()!=null) {
-                    Contact toDelete = contactList.getSelectionModel().getSelectedItem();
-                    contactList.getSelectionModel().selectPrevious();
+                ObservableList<Contact> toDeleteList = contactList.getSelectionModel().getSelectedItems();
+                for (int i = toDeleteList.size() - 1; i >= 0; i--) {
+                    Contact toDelete = contactList.getSelectionModel().getSelectedItems().get(0);
                     if (dbConnect.deleteContact(toDelete)==false) {
-                        contactList.getSelectionModel().selectNext();
+                        System.out.println("Błąd: Nie udało się usunąć wszystkich zaznaczonych kontaktów.");
+                        break;
                     }
                 }
             }
@@ -244,9 +243,9 @@ public class Program extends Application {
         TableColumn<Contact,String> companyCol = new TableColumn("Firma");
         companyCol.setCellValueFactory(new PropertyValueFactory<>("companyName"));
 
+        contactList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contactList.setItems(filteredList);
         contactList.getColumns().addAll(firstNameCol,lastNameCol,phoneNumberCol,emailCol, companyCol);
-
         contactList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contact>() {
             @Override
             public void changed(ObservableValue<? extends Contact> observable, Contact oldValue, Contact newValue) {
@@ -259,6 +258,16 @@ public class Program extends Application {
                     modifyContactButton.setDisable(false);
                     deleteContactButton.setDisable(false);
                     contactViewer.setContact(newValue);
+                }
+            }
+        });
+        contactList.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ObservableList<Contact> selectedList = contactList.getSelectionModel().getSelectedItems();
+                if (selectedList.isEmpty()==false) {
+                    //Dragboard db = contactList.startDragAndDrop();
+
                 }
             }
         });
