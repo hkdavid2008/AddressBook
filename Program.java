@@ -37,6 +37,7 @@ public class Program extends Application {
     private ScrollPane viewerPane;
     private TreeView<MailingList> bookList;
     private SQLiteConnect dbConnect = new SQLiteConnect("default.db");
+    private ObservableList<Contact> dragAndDropList;
 
     private ObservableList<Contact> getContats() {
         dbConnect.newContact(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
@@ -46,7 +47,7 @@ public class Program extends Application {
     }
 
     private TreeView<MailingList> getMailingLists() {
-        TreeItem<MailingList> root = createNode(new MailingList(-1, "Wszystkie adresy"));
+        TreeItem<MailingList> root = createNode(dbConnect.getMailingLists().get(0));
         return new TreeView<MailingList>(root);
     }
 
@@ -63,12 +64,13 @@ public class Program extends Application {
 
             @Override
             public ObservableList<TreeItem<MailingList>> getChildren() {
-                System.out.println(list.getName());
                 ObservableList<TreeItem<MailingList>> observableList = FXCollections.observableArrayList();
                 if (list.getId()==-1) {
                     for (MailingList newList : dbConnect.getMailingLists()) {
-                        TreeItem<MailingList> item = new TreeItem<MailingList>(newList);
-                        observableList.add(item);
+                        if (newList.getId()!=-1) {
+                            TreeItem<MailingList> item = new TreeItem<MailingList>(newList);
+                            observableList.add(item);
+                        }
                     }
                 }
                 return observableList;
@@ -96,7 +98,7 @@ public class Program extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    ContactEditor newEditor = new ContactEditor();
+                    ContactEditor newEditor = new ContactEditor(dbConnect.getMailingLists());
                     if (newEditor.getContact()!=null) {
                         dbConnect.newContact(newEditor.getContact());
                     }
@@ -116,7 +118,7 @@ public class Program extends Application {
             public void handle(ActionEvent event) {
                 if (contactList.getSelectionModel().getSelectedItem()!=null) {
                     try {
-                        ContactEditor newEditor = new ContactEditor(contactList.getSelectionModel().getSelectedItem());
+                        ContactEditor newEditor = new ContactEditor(dbConnect.getMailingLists(), contactList.getSelectionModel().getSelectedItem());
                         Contact updatedContact = newEditor.getContact();
                         if (updatedContact!=null) {
                             if (dbConnect.updateContact(updatedContact)==true) {
@@ -184,18 +186,34 @@ public class Program extends Application {
                 filteredList.setPredicate(new Predicate<Contact>() {
                     @Override
                     public boolean test(Contact contact) {
-                        if (newValue==null | newValue.isEmpty()==true) {
-                            return true;
-                        }
-
-                        long count = contactList.getColumns().stream().count();
-                        for (int j = 0; j < count; j++) {
-                            String entry = "" + contactList.getColumns().get(j).getCellData(contact);
-                            if (entry.toLowerCase().contains(newValue.toLowerCase())) {
+                        if (bookList.getSelectionModel().getSelectedItem().getValue()==null || bookList.getSelectionModel().getSelectedItem().getValue().getId()==-1) {
+                            if (newValue == null | newValue.isEmpty() == true) {
                                 return true;
                             }
+
+                            long count = contactList.getColumns().stream().count();
+                            for (int j = 0; j < count; j++) {
+                                String entry = "" + contactList.getColumns().get(j).getCellData(contact);
+                                if (entry.toLowerCase().contains(newValue.toLowerCase())) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        } else {
+                            //selected list
+                            if (newValue == null | newValue.isEmpty() == true) {
+                                return true;
+                            }
+
+                            long count = contactList.getColumns().stream().count();
+                            for (int j = 0; j < count; j++) {
+                                String entry = "" + contactList.getColumns().get(j).getCellData(contact);
+                                if (entry.toLowerCase().contains(newValue.toLowerCase())) {
+                                    return true;
+                                }
+                            }
+                            return false;
                         }
-                        return false;
                     }
                 });
             }
@@ -213,6 +231,20 @@ public class Program extends Application {
 
         bookList = getMailingLists();
         bookList.setEditable(true);
+        bookList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<MailingList>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<MailingList>> observable, TreeItem<MailingList> oldValue, TreeItem<MailingList> newValue) {
+                filteredList.setPredicate(new Predicate<Contact>() {
+                    @Override
+                    public boolean test(Contact contact) {
+                        if (contact.getMailingListId()==newValue.getValue().getId()) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
         bookList.setCellFactory(new Callback<TreeView<MailingList>, TreeCell<MailingList>>() {
             @Override
             public TreeCell<MailingList> call(TreeView<MailingList> param) {
@@ -228,6 +260,7 @@ public class Program extends Application {
 
         //Contact list
         contactList = new TableView<>();
+
         TableColumn<Contact,String> firstNameCol = new TableColumn("Imię");
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
@@ -264,11 +297,19 @@ public class Program extends Application {
         contactList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                ObservableList<Contact> selectedList = contactList.getSelectionModel().getSelectedItems();
-                if (selectedList.isEmpty()==false) {
-                    //Dragboard db = contactList.startDragAndDrop();
-
+                System.out.println("Zaznaczono " + contactList.getSelectionModel().getSelectedItems().size() + " elementów.");
+                Dragboard db = contactList.startDragAndDrop();
+                ClipboardContent content = new ClipboardContent();
+                String toSend = "";
+                if (contactList.getSelectionModel().getSelectedItem()!=null) {
+                    for (Contact toMove : contactList.getSelectionModel().getSelectedItems()) {
+                        toSend += toMove.getId() + " ";
+                    }
+                    content.putString(toSend);
+                    //dragAndDropList = contactList.getSelectionModel().getSelectedItems();
+                    event.consume();
                 }
+
             }
         });
 
@@ -300,7 +341,19 @@ public class Program extends Application {
         private TextField editField;
 
         public MailingListCell() {
-
+            setOnDragOver(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                    System.out.println("Coś tam odebrano");
+//                    if (dragAndDropList!=null) {
+//                        for (Contact toMove : dragAndDropList) {
+//                            dbConnect.changeMailingList(toMove, getItem());
+//                        }
+//                    }
+                    event.consume();
+                }
+            });
         }
 
         @Override

@@ -344,6 +344,10 @@ public class SQLiteConnect {
             Statement selectStmt = c.createStatement();
             ResultSet results = selectStmt.executeQuery("SELECT * FROM MailingLists;");
             mailingLists.clear();
+            if (results.isBeforeFirst()==false) {
+                String sql3 = "INSERT INTO MailingLists VALUES (-1, 'Wszystkie adresy');";
+                statement.execute(sql3);
+            }
             while (results.next()) {
                 MailingList newList = new MailingList(results.getInt(1), results.getString(2));
                 mailingLists.add(newList);
@@ -352,5 +356,22 @@ public class SQLiteConnect {
             selecterror.printStackTrace();
         }
         return mailingLists;
+    }
+
+    public boolean changeMailingList(Contact contact, MailingList targetList) {
+        String updateSql = "UPDATE Contacts SET " +
+                "mailingListId = ? " +
+                "WHERE id = " + contact.getId() + ";";
+        try {
+            PreparedStatement stmtUpdate = c.prepareStatement(updateSql);
+            stmtUpdate.setInt(1, targetList.getId());
+            stmtUpdate.executeUpdate();
+            System.out.println("Pomyślnie przeniesiono kontakt");
+        } catch (SQLException updateerror) {
+            updateerror.printStackTrace();
+            return false;
+        }
+        getContactsList();
+        return true;
     }
 }

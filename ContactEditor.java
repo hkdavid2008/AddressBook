@@ -1,5 +1,6 @@
 package addressbook;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,19 +13,20 @@ public class ContactEditor {
     private Contact contact;
     private ContactEditorController editorController;
 
-    public ContactEditor() throws IOException  {
+    public ContactEditor(ObservableList<MailingList> mailingLists) throws IOException  {
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ContactEditorForm.fxml"));
         Parent form = loader.load();
         editorController = loader.getController();
+        editorController.setMailingLists(mailingLists);
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
     }
 
-    public ContactEditor(Contact contactEdit) throws IOException  {
+    public ContactEditor(ObservableList<MailingList> mailingLists, Contact contactEdit) throws IOException  {
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
 
@@ -32,6 +34,7 @@ public class ContactEditor {
         Parent form = loader.load();
         editorController = loader.getController();
         setContact(contactEdit);
+        editorController.setMailingLists(mailingLists);
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
@@ -70,6 +73,7 @@ public class ContactEditor {
         editorController.setInfo4Field(contact.getInfo4());
         editorController.setNotesField(contact.getNotes());
         editorController.setBirthdayField(contact.getBirthday());
+        editorController.setMailingList(contact.getMailingListId());
     }
 
     public Contact getContact() {
@@ -109,6 +113,7 @@ public class ContactEditor {
         contact.setInfo4(editorController.getInfo4Field());
         contact.setNotes(editorController.getNotesField());
         contact.setBirthday(editorController.getBirthdayField());
+        contact.setMailingListId(editorController.getMailingList().getId());
         return contact;
     }
 }

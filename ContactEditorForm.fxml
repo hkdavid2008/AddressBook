@@ -22,7 +22,7 @@
       <HBox fx:id="firstNameFIeld" alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="570.0" spacing="15.0" BorderPane.alignment="TOP_LEFT">
          <children>
             <Label text="Dodaj do" />
-            <ComboBox prefWidth="150.0" />
+            <ComboBox fx:id="mailingListsBox" prefWidth="150.0" />
          </children>
          <BorderPane.margin>
             <Insets bottom="15.0" left="15.0" top="15.0" />

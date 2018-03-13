@@ -1,10 +1,13 @@
 package addressbook;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -48,6 +51,7 @@ public class ContactEditorController {
     @FXML private TextField info3Field;
     @FXML private TextField info4Field;
     @FXML private TextArea notesField;
+    @FXML private ComboBox<MailingList> mailingListsBox;
 
     public String getFirstNameField() {
         return firstNameField.getText();
@@ -378,5 +382,24 @@ public class ContactEditorController {
             Stage myStage = (Stage)okButton.getScene().getWindow();
             myStage.close();
         }
+    }
+
+    public void setMailingLists(ObservableList<MailingList> list) {
+        mailingListsBox.setItems(list);
+        mailingListsBox.getSelectionModel().selectFirst();
+    }
+
+    public MailingList getMailingList() {
+        return mailingListsBox.getSelectionModel().getSelectedItem();
+    }
+
+    public void setMailingList(int id) {
+        for (MailingList mailingList : mailingListsBox.getItems()) {
+            if (mailingList.getId()==id) {
+                mailingListsBox.getSelectionModel().select(mailingList);
+                return;
+            }
+        }
+        mailingListsBox.getSelectionModel().selectFirst();
     }
 }
