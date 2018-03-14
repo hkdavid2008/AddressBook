@@ -40,7 +40,7 @@ public class Program extends Application {
     private ObservableList<Contact> dragAndDropList;
 
     private ObservableList<Contact> getContats() {
-        dbConnect.newContact(new Contact("Jan","Kowalski","665015862","paw.inter@onet.eu"));
+        dbConnect.newContact(new Contact("Jan","Kowalski","123456789","prankster@yopmail.com"));
         dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
         dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return dbConnect.getContactsList();
@@ -82,7 +82,6 @@ public class Program extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         //Layout
         BorderPane pane = new BorderPane();
 
@@ -186,34 +185,27 @@ public class Program extends Application {
                 filteredList.setPredicate(new Predicate<Contact>() {
                     @Override
                     public boolean test(Contact contact) {
-                        if (bookList.getSelectionModel().getSelectedItem().getValue()==null || bookList.getSelectionModel().getSelectedItem().getValue().getId()==-1) {
-                            if (newValue == null | newValue.isEmpty() == true) {
+                        MailingList selectedMailingList = bookList.getSelectionModel().getSelectedItem().getValue();
+                        if (newValue == null | newValue.isEmpty() == true) {
+                            if (selectedMailingList==null|| selectedMailingList.getId()==-1) {
+                                return true;
+                            } else if (selectedMailingList.getId()==contact.getMailingListId()) {
                                 return true;
                             }
-
-                            long count = contactList.getColumns().stream().count();
-                            for (int j = 0; j < count; j++) {
-                                String entry = "" + contactList.getColumns().get(j).getCellData(contact);
-                                if (entry.toLowerCase().contains(newValue.toLowerCase())) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        } else {
-                            //selected list
-                            if (newValue == null | newValue.isEmpty() == true) {
-                                return true;
-                            }
-
-                            long count = contactList.getColumns().stream().count();
-                            for (int j = 0; j < count; j++) {
-                                String entry = "" + contactList.getColumns().get(j).getCellData(contact);
-                                if (entry.toLowerCase().contains(newValue.toLowerCase())) {
-                                    return true;
-                                }
-                            }
-                            return false;
                         }
+
+                        long count = contactList.getColumns().stream().count();
+                        for (int j = 0; j < count; j++) {
+                            String entry = "" + contactList.getColumns().get(j).getCellData(contact);
+                            if (entry.toLowerCase().contains(newValue.toLowerCase())) {
+                                if (selectedMailingList==null || selectedMailingList.getId()==-1) {
+                                    return true;
+                                } else if (selectedMailingList.getId()==contact.getMailingListId()) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
                     }
                 });
             }
@@ -239,6 +231,8 @@ public class Program extends Application {
                     public boolean test(Contact contact) {
                         if (contact.getMailingListId()==newValue.getValue().getId()) {
                             return true;
+                        } else if (newValue.getValue().getId()==-1) {
+                            return true;
                         }
                         return false;
                     }
@@ -251,7 +245,6 @@ public class Program extends Application {
                 return new MailingListCell();
             }
         });
-
         center.getItems().add(bookList);
 
         //Center-right layout
@@ -294,24 +287,24 @@ public class Program extends Application {
                 }
             }
         });
-        contactList.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("Zaznaczono " + contactList.getSelectionModel().getSelectedItems().size() + " elementów.");
-                Dragboard db = contactList.startDragAndDrop();
-                ClipboardContent content = new ClipboardContent();
-                String toSend = "";
-                if (contactList.getSelectionModel().getSelectedItem()!=null) {
-                    for (Contact toMove : contactList.getSelectionModel().getSelectedItems()) {
-                        toSend += toMove.getId() + " ";
-                    }
-                    content.putString(toSend);
-                    //dragAndDropList = contactList.getSelectionModel().getSelectedItems();
-                    event.consume();
-                }
-
-            }
-        });
+//        contactList.setOnDragDetected(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                System.out.println("Zaznaczono " + contactList.getSelectionModel().getSelectedItems().size() + " elementów.");
+//                Dragboard db = contactList.startDragAndDrop();
+//                ClipboardContent content = new ClipboardContent();
+//                String toSend = "";
+//                if (contactList.getSelectionModel().getSelectedItem()!=null) {
+//                    for (Contact toMove : contactList.getSelectionModel().getSelectedItems()) {
+//                        toSend += toMove.getId() + " ";
+//                    }
+//                    content.putString(toSend);
+//                    //dragAndDropList = contactList.getSelectionModel().getSelectedItems();
+//                    event.consume();
+//                }
+//
+//            }
+//        });
 
         viewerPane = new ScrollPane();
 
@@ -339,21 +332,20 @@ public class Program extends Application {
 
     private final class MailingListCell extends TreeCell<MailingList> {
         private TextField editField;
-
         public MailingListCell() {
-            setOnDragOver(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    System.out.println("Coś tam odebrano");
+//            setOnDragOver(new EventHandler<DragEvent>() {
+//                @Override
+//                public void handle(DragEvent event) {
+//                    event.acceptTransferModes(TransferMode.ANY);
+//                    System.out.println("Coś tam odebrano");
 //                    if (dragAndDropList!=null) {
 //                        for (Contact toMove : dragAndDropList) {
 //                            dbConnect.changeMailingList(toMove, getItem());
 //                        }
-//                    }
-                    event.consume();
-                }
-            });
+////                    }
+//                    event.consume();
+//                }
+//            });
         }
 
         @Override
@@ -389,10 +381,36 @@ public class Program extends Application {
         protected void updateItem(MailingList item, boolean empty) {
             super.updateItem(item, empty);
 
+            ContextMenu menu = new ContextMenu();
+            MenuItem deleteMailingListButton = new MenuItem("Usuń listę");
+            deleteMailingListButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    //dbConnect.deleteMailingList(getTreeItem().getValue());
+                    int count = dbConnect.countMailingList(getItem());
+                    if (count>0) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Czy chcesz usunąć listę mailingową?");
+                        alert.setHeaderText("Czy chcesz usunąć listę mailingową?");
+                        alert.setContentText("Na liście znajduje się " + count + " kontaktów. Czy chcesz usunąć listę razem z kontaktami?");
+                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            dbConnect.deleteMailingList(getItem());
+                        }
+                    }
+                }
+            });
+            menu.getItems().add(deleteMailingListButton);
+
+
             if (empty) {
                 setText(null);
                 setGraphic(null);
             } else {
+                if (getItem().getId()!=-1) {
+                    setContextMenu(menu);
+                }
                 if (isEditing()) {
                     if (editField!= null) {
                         editField.setText(getItem().getName());

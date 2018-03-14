@@ -257,7 +257,7 @@ public class SQLiteConnect {
                 newContact.setInfo3(results.getString("info3"));
                 newContact.setInfo4(results.getString("info4"));
                 newContact.setNotes(results.getString("notes"));
-                newContact.setId(results.getInt("mailingListId"));
+                newContact.setMailingListId(results.getInt("mailingListId"));
                 newContact.setId(results.getInt("id"));
                 if (newContact.getId()>0) {
                     contactList.add(newContact);
@@ -330,6 +330,11 @@ public class SQLiteConnect {
             PreparedStatement deleteStmt = c.prepareStatement("DELETE FROM MailingLists WHERE id = ?");
             deleteStmt.setInt(1,list.getId());
             deleteStmt.executeUpdate();
+            for (int i = contactList.size() - 1; i >= 0; i--) {
+                if (contactList.get(i).getMailingListId()==list.getId()) {
+                    deleteContact(contactList.get(i));
+                }
+            }
             contactList.remove(list);
             System.out.println("Pomyślnie usunięto listę mailingową id = " + list.getId());
         } catch (SQLException deleteerror) {
@@ -347,6 +352,8 @@ public class SQLiteConnect {
             if (results.isBeforeFirst()==false) {
                 String sql3 = "INSERT INTO MailingLists VALUES (-1, 'Wszystkie adresy');";
                 statement.execute(sql3);
+                MailingList defaultList = new MailingList(-1, "Wszystkie adresy");
+                mailingLists.add(defaultList);
             }
             while (results.next()) {
                 MailingList newList = new MailingList(results.getInt(1), results.getString(2));
@@ -373,5 +380,19 @@ public class SQLiteConnect {
         }
         getContactsList();
         return true;
+    }
+
+    public int countMailingList(MailingList mailingList) {
+        String countSQL = "SELECT COUNT(*) FROM Contacts WHERE mailingListId=" + mailingList.getId();
+        int result = 0;
+        try {
+            ResultSet count = statement.executeQuery(countSQL);
+            while (count.next()) {
+                result = count.getInt(1);
+            }
+        } catch (SQLException countError) {
+            countError.printStackTrace();
+        }
+        return result;
     }
 }
