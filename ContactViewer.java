@@ -1,7 +1,5 @@
 package addressbook;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -12,6 +10,7 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
+@SuppressWarnings("Convert2Lambda")
 public class ContactViewer extends AnchorPane {
 
     private Contact currentContact;
@@ -57,7 +56,7 @@ public class ContactViewer extends AnchorPane {
     public void setContact(Contact contact) {
         currentContact = contact;
 
-        currentContact.nameProperty().addListener(new ChangeListener<String>() {
+        currentContact.nameProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (newValue.isEmpty()==false) {
@@ -68,7 +67,7 @@ public class ContactViewer extends AnchorPane {
             }
         });
 
-        currentContact.firstNameProperty().addListener(new ChangeListener<String>() {
+        currentContact.firstNameProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (currentContact.getName().isEmpty()) {
@@ -77,7 +76,7 @@ public class ContactViewer extends AnchorPane {
             }
         });
 
-        currentContact.lastNameProperty().addListener(new ChangeListener<String>() {
+        currentContact.lastNameProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (currentContact.getName().isEmpty()) {

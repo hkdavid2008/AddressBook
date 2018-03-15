@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -38,6 +37,7 @@ public class Program extends Application {
     private TreeView<MailingList> bookList;
     private SQLiteConnect dbConnect = new SQLiteConnect("default.db");
     private ObservableList<Contact> dragAndDropList;
+    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
     private ObservableList<Contact> getContats() {
         dbConnect.newContact(new Contact("Jan","Kowalski","123456789","prankster@yopmail.com"));
@@ -115,22 +115,7 @@ public class Program extends Application {
         modifyContactButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (contactList.getSelectionModel().getSelectedItem()!=null) {
-                    try {
-                        ContactEditor newEditor = new ContactEditor(dbConnect.getMailingLists(), contactList.getSelectionModel().getSelectedItem());
-                        Contact updatedContact = newEditor.getContact();
-                        if (updatedContact!=null) {
-                            if (dbConnect.updateContact(updatedContact)==true) {
-                                System.out.println("Pomyślnie zaktualizowano kontakt.");
-                            } else {
-                                System.out.println("Błąd! Nie udało się zauktualizować kontaktu.");
-                            }
-                        }
-                        //contactViewer.setContact();
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
+                modifyContact();
             }
         });
 
@@ -142,14 +127,7 @@ public class Program extends Application {
         deleteContactButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ObservableList<Contact> toDeleteList = contactList.getSelectionModel().getSelectedItems();
-                for (int i = toDeleteList.size() - 1; i >= 0; i--) {
-                    Contact toDelete = contactList.getSelectionModel().getSelectedItems().get(0);
-                    if (dbConnect.deleteContact(toDelete)==false) {
-                        System.out.println("Błąd: Nie udało się usunąć wszystkich zaznaczonych kontaktów.");
-                        break;
-                    }
-                }
+                deleteSelectedContacts();
             }
         });
 
@@ -167,7 +145,8 @@ public class Program extends Application {
                 if (result.isPresent()==true) {
                     if (result.get().isEmpty()==false) {
                         dbConnect.newMailingList(result.get());
-                        bookList.refresh();
+                        bookList.getTreeItem(0).setExpanded(false);
+                        bookList.getTreeItem(0).setExpanded(true);
                     }
                 }
             }
@@ -193,7 +172,6 @@ public class Program extends Application {
                                 return true;
                             }
                         }
-
                         long count = contactList.getColumns().stream().count();
                         for (int j = 0; j < count; j++) {
                             String entry = "" + contactList.getColumns().get(j).getCellData(contact);
@@ -242,9 +220,36 @@ public class Program extends Application {
         bookList.setCellFactory(new Callback<TreeView<MailingList>, TreeCell<MailingList>>() {
             @Override
             public TreeCell<MailingList> call(TreeView<MailingList> param) {
-                return new MailingListCell();
+                MailingListCell cell = new MailingListCell();
+                cell.setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                            if (cell.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                                event.consume();
+                            }
+                        }
+                    }
+                });
+                cell.setOnDragDropped(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        if (db.hasContent(SERIALIZED_MIME_TYPE)==true) {
+                            if (cell.getIndex()!=(Integer)db.getContent(SERIALIZED_MIME_TYPE)) {
+
+                                event.consume();
+                            }
+                        }
+                    }
+                });
+                return cell;
             }
         });
+        bookList.getSelectionModel().selectFirst();
+        bookList.getTreeItem(0).setExpanded(true);
         center.getItems().add(bookList);
 
         //Center-right layout
@@ -253,7 +258,6 @@ public class Program extends Application {
 
         //Contact list
         contactList = new TableView<>();
-
         TableColumn<Contact,String> firstNameCol = new TableColumn("Imię");
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
@@ -287,6 +291,24 @@ public class Program extends Application {
                 }
             }
         });
+        contactList.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode()==KeyCode.DELETE) {
+                    deleteSelectedContacts();
+                }
+            }
+        });
+
+//        contactList.setOnMousePressed(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                if (event.isPrimaryButtonDown()==true && event.getClickCount()==2) {
+//                    modifyContact();
+//                }
+//            }
+//        });
+
 //        contactList.setOnDragDetected(new EventHandler<MouseEvent>() {
 //            @Override
 //            public void handle(MouseEvent event) {
@@ -305,6 +327,37 @@ public class Program extends Application {
 //
 //            }
 //        });
+
+        contactList.setRowFactory(new Callback<TableView<Contact>, TableRow<Contact>>() {
+            @Override
+            public TableRow<Contact> call(TableView<Contact> param) {
+                TableRow<Contact> row = new TableRow<>();
+                row.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (row.isEmpty()==false) {
+                            Integer index = row.getIndex();
+                            Contact toMove = row.getItem();
+                            Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                            db.setDragView(row.snapshot(null,null));
+                            ClipboardContent cc = new ClipboardContent();
+                            cc.put(SERIALIZED_MIME_TYPE, index);
+                            db.setContent(cc);
+                            event.consume();
+                        }
+                    }
+                });
+                row.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (event.isPrimaryButtonDown()==true && event.getClickCount()==2) {
+                            modifyContact();
+                        }
+                    }
+                });
+                return row;
+            }
+        });
 
         viewerPane = new ScrollPane();
 
@@ -348,6 +401,8 @@ public class Program extends Application {
 //            });
         }
 
+
+
         @Override
         public void startEdit() {
             super.startEdit();
@@ -386,7 +441,6 @@ public class Program extends Application {
             deleteMailingListButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    //dbConnect.deleteMailingList(getTreeItem().getValue());
                     int count = dbConnect.countMailingList(getItem());
                     if (count>0) {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -398,7 +452,11 @@ public class Program extends Application {
                         if (result.get() == ButtonType.OK) {
                             dbConnect.deleteMailingList(getItem());
                         }
+                    } else {
+                        dbConnect.deleteMailingList(getItem());
                     }
+                    bookList.getTreeItem(0).setExpanded(false);
+                    bookList.getTreeItem(0).setExpanded(true);
                 }
             });
             menu.getItems().add(deleteMailingListButton);
@@ -437,6 +495,35 @@ public class Program extends Application {
                     }
                 }
             });
+        }
+    }
+
+    public void deleteSelectedContacts() {
+        ObservableList<Contact> toDeleteList = contactList.getSelectionModel().getSelectedItems();
+        for (int i = toDeleteList.size() - 1; i >= 0; i--) {
+            Contact toDelete = contactList.getSelectionModel().getSelectedItems().get(0);
+            if (dbConnect.deleteContact(toDelete)==false) {
+                System.out.println("Błąd: Nie udało się usunąć wszystkich zaznaczonych kontaktów.");
+                break;
+            }
+        }
+    }
+
+    public void modifyContact() {
+        if (contactList.getSelectionModel().getSelectedItem()!=null) {
+            try {
+                ContactEditor newEditor = new ContactEditor(dbConnect.getMailingLists(), contactList.getSelectionModel().getSelectedItem());
+                Contact updatedContact = newEditor.getContact();
+                if (updatedContact!=null) {
+                    if (dbConnect.updateContact(updatedContact)==true) {
+                        System.out.println("Pomyślnie zaktualizowano kontakt.");
+                    } else {
+                        System.out.println("Błąd! Nie udało się zauktualizować kontaktu.");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

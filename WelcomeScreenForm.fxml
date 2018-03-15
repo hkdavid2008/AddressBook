@@ -8,23 +8,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="545.0" prefWidth="919.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <ImageView fitHeight="158.0" fitWidth="150.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@addressbook-icon.png" />
-            </image>
-        </ImageView>
-        <Label fx:id="nameLabel" layoutX="183.0" layoutY="55.0" text="Książka adresowa">
-            <font>
-                <Font name="Roboto Bold" size="25.0" />
-            </font>
-        </Label>
-        <Separator layoutX="183.0" layoutY="89.0" prefHeight="7.0" prefWidth="573.0">
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-        </Separator>
-      <Label layoutX="183.0" layoutY="118.0" text="Witaj w programie Książka adresowa! W celu dodania nowego kontaktu, kliknij przycisk &quot;Nowa wizytówka&quot;." />
-    </children>
+<fx:root prefHeight="545.0" prefWidth="919.0" type="javafx.scene.layout.AnchorPane"
+         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <ImageView fitHeight="158.0" fitWidth="150.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@addressbook-icon.png"/>
+    </ImageView>
+    <Label fx:id="nameLabel" layoutX="183.0" layoutY="55.0" text="Książka adresowa">
+        <font>
+            <Font name="Roboto Bold" size="25.0"/>
+        </font>
+    </Label>
+    <Separator layoutX="183.0" layoutY="89.0" prefHeight="7.0" prefWidth="573.0">
+        <opaqueInsets>
+            <Insets/>
+        </opaqueInsets>
+    </Separator>
+    <Label layoutX="183.0" layoutY="118.0"
+           text="Witaj w programie Książka adresowa! W celu dodania nowego kontaktu, kliknij przycisk &quot;Nowa wizytówka&quot;."/>
 </fx:root>

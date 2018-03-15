@@ -13,166 +13,145 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="545.0" prefWidth="919.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <ImageView fitHeight="114.0" fitWidth="132.0" layoutX="33.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@profile.png" />
-         </image>
-      </ImageView>
-      <Label fx:id="nameLabel" layoutX="173.0" layoutY="26.0" text="Imię i nazwisko">
-         <font>
-            <Font name="Roboto Thin" size="25.0" />
-         </font>
-      </Label>
-      <Separator layoutX="173.0" layoutY="57.0" prefHeight="7.0" prefWidth="573.0">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Separator>
-      <VBox layoutX="173.0" layoutY="86.0" prefHeight="341.0" prefWidth="352.0">
-         <children>
-            <TitledPane animated="false" text="Kontakt">
-               <content>
-                  <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="122.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="206.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Imię" />
-                        <Label text="Nazwisko" GridPane.rowIndex="1" />
-                        <Label text="Adres e-mail" GridPane.rowIndex="2" />
-                        <Label fx:id="firstNameLabel" GridPane.columnIndex="1" />
-                        <Label fx:id="lastNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Dodatkowy e-mail" GridPane.rowIndex="3" />
-                        <Label fx:id="secondEmailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                     </children>
-                  </GridPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Dom">
-               <content>
-                  <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="86.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Stanowisko" />
-                        <Label text="Dział" GridPane.rowIndex="1" />
-                        <Label text="Firma" GridPane.rowIndex="2" />
-                        <Label fx:id="officeLabel" GridPane.columnIndex="1" />
-                        <Label fx:id="departamentLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="companyNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Adres" GridPane.rowIndex="3" />
-                        <Label fx:id="companyAddressLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Strona WWW" GridPane.rowIndex="4" />
-                        <Label fx:id="companyWebsiteLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                     </children>
-                  </GridPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Inne">
-               <content>
-                  <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="86.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Urodziny" />
-                        <Label text="Info 1" GridPane.rowIndex="1" />
-                        <Label text="Info 2" GridPane.rowIndex="2" />
-                        <Label fx:id="birthdayLabel" GridPane.columnIndex="1" />
-                        <Label fx:id="info1Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="info2Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                     </children>
-                           </GridPane>
-               </content>
-            </TitledPane>
-         </children>
-      </VBox>
-      <VBox layoutX="539.0" layoutY="86.0" prefHeight="264.0" prefWidth="367.0">
-         <children>
-            <TitledPane animated="false" text="Telefon">
-               <content>
-                  <GridPane hgap="10.0" prefHeight="113.0" prefWidth="365.0">
-                     <columnConstraints>
-                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="143.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="184.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Praca" />
-                        <Label text="Dom" GridPane.rowIndex="1" />
-                        <Label text="Fax" GridPane.rowIndex="2" />
-                        <Label fx:id="workPhoneNumber" GridPane.columnIndex="1" />
-                        <Label fx:id="hausePhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="faxPhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Telefon komórkowy" GridPane.rowIndex="3" />
-                        <Label fx:id="mobilePhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Pager" GridPane.rowIndex="4" />
-                        <Label fx:id="pagerPhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                     </children>
-                  </GridPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Praca">
-               <content>
-                  <GridPane hgap="10.0" prefHeight="110.0" prefWidth="365.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="86.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Adres" />
-                        <Label text="Miasto" GridPane.rowIndex="1" />
-                        <Label text="Województwo" GridPane.rowIndex="2" />
-                        <Label fx:id="addressLabel" GridPane.columnIndex="1" />
-                        <Label fx:id="cityLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="voivodeshipLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Kod pocztowy" GridPane.rowIndex="3" />
-                        <Label fx:id="postalCodeLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Strona WWW" GridPane.rowIndex="4" />
-                        <Label fx:id="websiteLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                     </children>
-                  </GridPane>
-               </content>
-            </TitledPane>
-         </children>
-      </VBox>
-   </children>
+<fx:root prefHeight="545.0" prefWidth="919.0" type="javafx.scene.layout.AnchorPane"
+         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <ImageView fitHeight="114.0" fitWidth="132.0" layoutX="33.0" layoutY="43.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@profile.png"/>
+    </ImageView>
+    <Label fx:id="nameLabel" layoutX="173.0" layoutY="26.0" text="Imię i nazwisko">
+        <font>
+          <Font name="Roboto Thin" size="25.0"/>
+        </font>
+    </Label>
+    <Separator layoutX="173.0" layoutY="57.0" prefHeight="7.0" prefWidth="573.0">
+        <opaqueInsets>
+          <Insets/>
+        </opaqueInsets>
+    </Separator>
+    <VBox layoutX="173.0" layoutY="86.0" prefHeight="341.0" prefWidth="352.0">
+        <TitledPane animated="false" text="Kontakt">
+            <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0"
+                                       prefWidth="122.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="206.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Label text="Imię"/>
+                <Label text="Nazwisko" GridPane.rowIndex="1"/>
+                <Label text="Adres e-mail" GridPane.rowIndex="2"/>
+                <Label fx:id="firstNameLabel" GridPane.columnIndex="1"/>
+                <Label fx:id="lastNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Dodatkowy e-mail" GridPane.rowIndex="3"/>
+                <Label fx:id="secondEmailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </GridPane>
+        </TitledPane>
+        <TitledPane animated="false" text="Dom">
+            <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0"
+                                       prefWidth="86.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Label text="Stanowisko"/>
+                <Label text="Dział" GridPane.rowIndex="1"/>
+                <Label text="Firma" GridPane.rowIndex="2"/>
+                <Label fx:id="officeLabel" GridPane.columnIndex="1"/>
+                <Label fx:id="departamentLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="companyNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Adres" GridPane.rowIndex="3"/>
+                <Label fx:id="companyAddressLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="Strona WWW" GridPane.rowIndex="4"/>
+                <Label fx:id="companyWebsiteLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+        </TitledPane>
+        <TitledPane animated="false" text="Inne">
+            <GridPane hgap="10.0" prefHeight="86.0" prefWidth="299.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0"
+                                       prefWidth="86.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Label text="Urodziny"/>
+                <Label text="Info 1" GridPane.rowIndex="1"/>
+                <Label text="Info 2" GridPane.rowIndex="2"/>
+                <Label fx:id="birthdayLabel" GridPane.columnIndex="1"/>
+                <Label fx:id="info1Label" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="info2Label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+        </TitledPane>
+    </VBox>
+    <VBox layoutX="539.0" layoutY="86.0" prefHeight="264.0" prefWidth="367.0">
+        <TitledPane animated="false" text="Telefon">
+            <GridPane hgap="10.0" prefHeight="113.0" prefWidth="365.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0"
+                                       prefWidth="143.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="184.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Label text="Praca"/>
+                <Label text="Dom" GridPane.rowIndex="1"/>
+                <Label text="Fax" GridPane.rowIndex="2"/>
+                <Label fx:id="workPhoneNumber" GridPane.columnIndex="1"/>
+                <Label fx:id="hausePhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="faxPhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Telefon komórkowy" GridPane.rowIndex="3"/>
+                <Label fx:id="mobilePhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="Pager" GridPane.rowIndex="4"/>
+                <Label fx:id="pagerPhoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+        </TitledPane>
+        <TitledPane animated="false" text="Praca">
+            <GridPane hgap="10.0" prefHeight="110.0" prefWidth="365.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0"
+                                       prefWidth="86.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="203.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Label text="Adres"/>
+                <Label text="Miasto" GridPane.rowIndex="1"/>
+                <Label text="Województwo" GridPane.rowIndex="2"/>
+                <Label fx:id="addressLabel" GridPane.columnIndex="1"/>
+                <Label fx:id="cityLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="voivodeshipLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Kod pocztowy" GridPane.rowIndex="3"/>
+                <Label fx:id="postalCodeLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="Strona WWW" GridPane.rowIndex="4"/>
+                <Label fx:id="websiteLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+        </TitledPane>
+    </VBox>
 </fx:root>
