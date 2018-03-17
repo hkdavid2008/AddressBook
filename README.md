@@ -5,7 +5,8 @@ Funkcje
 ====================
 * Wykorzystanie bazy SQLite do przechowywania danych
 * Wykorzystanie formularzy FXML do generowania widoków 
-* Dodawanie, usuwanie oraz edycja kontaktów na liście
-* Podgląd zaznaczonych kontaktów
+* Możliwość zaznaczania i usuwania wielu kontaktów jednocześnie
+* Dodawanie oraz edycja kontaktów za pomocą rozbudowanego edytora
+* Automatyczny podgląd zaznaczonych kontaktów 
 * Możliwość dodawania kontaktów do list dystrybucyjnych
 * Modyfikacja i usuwanie list dystrybucyjnych razem z kontaktami
