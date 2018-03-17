@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
-@SuppressWarnings("Convert2Lambda")
 public class ContactViewer extends AnchorPane {
 
     private Contact currentContact;
@@ -110,7 +109,7 @@ public class ContactViewer extends AnchorPane {
         voivodeshipLabel.textProperty().bind(currentContact.voivodeshipProperty());
         postalCodeLabel.textProperty().bind(currentContact.postalCodeProperty());
         websiteLabel.textProperty().bind(currentContact.websiteProperty());
-        //birthdayLabel.textProperty().bind(currentContact);        //TODO poprawić datę
+        birthdayLabel.textProperty().bind(currentContact.birthdayProperty());
         info1Label.textProperty().bind(currentContact.info1Property());
         info2Label.textProperty().bind(currentContact.info2Property());
     }

@@ -106,11 +106,7 @@ public class SQLiteConnect {
             pre.setString(15, contact.getVoivodeship());
             pre.setString(16, contact.getPostalCode());
             pre.setString(17, contact.getCountry());
-            if (contact.getBirthday()==null) {
-                pre.setString(18, "");
-            } else {
-                pre.setString(18, contact.getBirthday().toString());
-            }
+            pre.setString(18, contact.getBirthday());
             pre.setString(19, contact.getOffice());
             pre.setString(20, contact.getDepartament());
             pre.setString(21, contact.getCompanyName());
@@ -194,11 +190,7 @@ public class SQLiteConnect {
             stmtUpdate.setString(15, contact.getVoivodeship());
             stmtUpdate.setString(16, contact.getPostalCode());
             stmtUpdate.setString(17, contact.getCountry());
-            if (contact.getBirthday()==null) {
-                stmtUpdate.setString(18, "");
-            } else {
-                stmtUpdate.setString(18, contact.getBirthday().toString());
-            }
+            stmtUpdate.setString(18, contact.getBirthday());
             stmtUpdate.setString(19, contact.getOffice());
             stmtUpdate.setString(20, contact.getDepartament());
             stmtUpdate.setString(21, contact.getCompanyName());
@@ -244,7 +236,7 @@ public class SQLiteConnect {
                 newContact.setVoivodeship(results.getString("voivodeship"));
                 newContact.setPostalCode(results.getString("postalCode"));
                 newContact.setCountry(results.getString("country"));
-                //newContact.setBirthday(results.getString("birthday"));    //TODO poprawić datę
+                newContact.setBirthday(results.getString("birthday"));
                 newContact.setOffice(results.getString("office"));
                 newContact.setDepartament(results.getString("departament"));
                 newContact.setCompanyName(results.getString("companyName"));

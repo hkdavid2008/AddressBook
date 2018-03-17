@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class ContactEditor {
 
@@ -35,6 +38,7 @@ public class ContactEditor {
         editorController = loader.getController();
         setContact(contactEdit);
         editorController.setMailingLists(mailingLists);
+        editorController.setMailingList(contactEdit.getMailingListId());
 
         newWindow.setScene(new Scene(form));
         newWindow.showAndWait();
@@ -72,7 +76,16 @@ public class ContactEditor {
         editorController.setInfo3Field(contact.getInfo3());
         editorController.setInfo4Field(contact.getInfo4());
         editorController.setNotesField(contact.getNotes());
-        editorController.setBirthdayField(contact.getBirthday());
+
+        if (contact.getBirthday().isEmpty()==true) {
+            editorController.setBirthdayField(null);
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+            formatter = formatter.withLocale(Locale.ENGLISH);
+            LocalDate date = LocalDate.parse(contact.getBirthday(), formatter);
+            editorController.setBirthdayField(date);
+        }
+
         editorController.setMailingList(contact.getMailingListId());
     }
 
@@ -112,7 +125,12 @@ public class ContactEditor {
         contact.setInfo3(editorController.getInfo3Field());
         contact.setInfo4(editorController.getInfo4Field());
         contact.setNotes(editorController.getNotesField());
-        contact.setBirthday(editorController.getBirthdayField());
+        if (editorController.getBirthdayField()!=null) {
+            System.out.println(editorController.getBirthdayField().format(DateTimeFormatter.ISO_DATE));
+            contact.setBirthday(editorController.getBirthdayField().toString());
+        } else {
+            contact.setBirthday("");
+        }
         contact.setMailingListId(editorController.getMailingList().getId());
         return contact;
     }

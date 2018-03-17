@@ -14,8 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ContactEditorController {
-    private boolean status = true;
-
     @FXML private Label errorLabel;
     @FXML private Button okButton;
     @FXML private Button cancelButton;
@@ -26,10 +24,10 @@ public class ContactEditorController {
     @FXML private TextField hausePhoneNumberField;
     @FXML private TextField faxPhoneNumberField;
     @FXML private TextField pagerPhoneNumberField;
-    @FXML private TextField emailField;             //to validate
-    @FXML private TextField phoneNumberField;       //to validate
-    @FXML private TextField workPhoneNumberField;   //to validate
-    @FXML private TextField secondEmailField;       //to validate
+    @FXML private TextField emailField;
+    @FXML private TextField phoneNumberField;
+    @FXML private TextField workPhoneNumberField;
+    @FXML private TextField secondEmailField;
     @FXML private TextField addressField;
     @FXML private TextField cityField;
     @FXML private TextField voivodeshipField;
@@ -173,6 +171,9 @@ public class ContactEditorController {
     }
 
     public LocalDate getBirthdayField() {
+        if (birthdayField.getEditor().getText().isEmpty()==true) {
+            return null;
+        }
         return birthdayField.getValue();
     }
 

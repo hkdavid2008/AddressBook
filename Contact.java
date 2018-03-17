@@ -26,7 +26,7 @@ public class Contact {
     private StringProperty voivodeship = new SimpleStringProperty(this, "voivodeship", "");
     private StringProperty postalCode = new SimpleStringProperty(this, "postalCode", "");
     private StringProperty country = new SimpleStringProperty(this, "country", "");
-    private LocalDate birthday;
+    private StringProperty birthday = new SimpleStringProperty(this, "birthday", "");
     private StringProperty office = new SimpleStringProperty(this, "office", "");
     private StringProperty departament = new SimpleStringProperty(this, "departament", "");
     private StringProperty companyName = new SimpleStringProperty(this, "companyName", "");
@@ -41,7 +41,7 @@ public class Contact {
     private StringProperty notes = new SimpleStringProperty(this, "notes", "");
 
     public Contact() {
-        birthday = LocalDate.of(1997,10,7);
+
     }
 
     public Contact(String firstName, String lastName, String mobilePhoneNumber, String email) {
@@ -50,7 +50,6 @@ public class Contact {
         this.lastName.setValue(lastName);
         this.email.setValue(email);
         this.mobilePhoneNumber.setValue(mobilePhoneNumber);
-        birthday = LocalDate.of(1997,10,7);
     }
 
     public int getId() {
@@ -281,12 +280,16 @@ public class Contact {
         this.country.set(country);
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
+        return birthday.get();
+    }
+
+    public StringProperty birthdayProperty() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public void setBirthday(String birthday) {
+        this.birthday.set(birthday);
     }
 
     public String getOffice() {

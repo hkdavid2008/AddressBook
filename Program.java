@@ -40,9 +40,9 @@ public class Program extends Application {
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
     private ObservableList<Contact> getContats() {
-        dbConnect.newContact(new Contact("Jan","Kowalski","123456789","prankster@yopmail.com"));
-        dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
-        dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
+//        dbConnect.newContact(new Contact("Jan","Kowalski","123456789","prankster@yopmail.com"));
+//        dbConnect.newContact(new Contact("Andrzej","Zygalski","235698940","andrzejuu@yopmail.com"));
+//        dbConnect.newContact(new Contact("Jędrzej","Jędrzejewski","445777998","janko@yopmail.com"));
         return dbConnect.getContactsList();
     }
 
@@ -342,6 +342,7 @@ public class Program extends Application {
                             db.setDragView(row.snapshot(null,null));
                             ClipboardContent cc = new ClipboardContent();
                             cc.put(SERIALIZED_MIME_TYPE, index);
+                            System.out.println(index);
                             db.setContent(cc);
                             event.consume();
                         }
@@ -390,12 +391,13 @@ public class Program extends Application {
 //                @Override
 //                public void handle(DragEvent event) {
 //                    event.acceptTransferModes(TransferMode.ANY);
-//                    System.out.println("Coś tam odebrano");
-//                    if (dragAndDropList!=null) {
-//                        for (Contact toMove : dragAndDropList) {
-//                            dbConnect.changeMailingList(toMove, getItem());
-//                        }
+////                    System.out.println("Coś tam odebrano");
+////                    if (dragAndDropList!=null) {
+////                        for (Contact toMove : dragAndDropList) {
+////                            dbConnect.changeMailingList(toMove, getItem());
+////                        }
 ////                    }
+//                    System.out.println("test");
 //                    event.consume();
 //                }
 //            });
