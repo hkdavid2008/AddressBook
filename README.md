@@ -1,5 +1,5 @@
 # AddressBook
-Książka adresowa napisana przy użyciu JavaFX oraz SQLite inspirowana programem Mozilla Thunderbird. Projekt zrealizowano w ramach laboratoriów Języków Programowania Obiektowego (Politechnika Poznańska).
+Aplikacja do zarządzania kontaktami napisana przy użyciu JavaFX oraz SQLite, inspirowana książką adresową z programu Mozilla Thunderbird. Projekt zrealizowano w ramach laboratoriów Języków Programowania Obiektowego (Politechnika Poznańska).
 
 ![Demo](demo.gif)
 
